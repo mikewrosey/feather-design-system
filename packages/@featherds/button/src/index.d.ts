@@ -1,5 +1,6 @@
 declare module "@featherds/button" {
-  import { defineComponent } from "vue";
-  const FeatherButton: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const PROPS: typeof import("./components/FeatherButton.vue").props;
+  const FeatherButton: DefineComponent<typeof PROPS>;
   export { FeatherButton };
 }

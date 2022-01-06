@@ -28,8 +28,8 @@ describe("FocusTrap.vue", () => {
   });
   it("should add/remove events when enable changes", async () => {
     wrapper = getWrapper({ props: { enable: false }, slots });
-    const addEvents = spyOn(wrapper.vm, "addFocusTrapEvents");
-    const removeEvents = spyOn(wrapper.vm, "removeFocusTrapEvents");
+    const addEvents = jest.spyOn(wrapper.vm, "addFocusTrapEvents");
+    const removeEvents = jest.spyOn(wrapper.vm, "removeFocusTrapEvents");
     await wrapper.setProps({ enable: true });
     expect(addEvents).toHaveBeenCalled();
     await wrapper.setProps({ enable: false });
@@ -37,13 +37,13 @@ describe("FocusTrap.vue", () => {
   });
   it("should try and focus first descendant when enable changes to true", async () => {
     wrapper = getWrapper({ props: { enable: false }, slots });
-    const focusFirst = spyOn(wrapper.vm, "focusFirstDescendant");
+    const focusFirst = jest.spyOn(wrapper.vm, "focusFirstDescendant");
     await wrapper.setProps({ enable: true });
     expect(focusFirst).toHaveBeenCalled();
   });
   it("should remove events when unmounted", () => {
     wrapper = getWrapper({ props: { enable: false }, slots });
-    const removeEvents = spyOn(wrapper.vm, "removeFocusTrapEvents");
+    const removeEvents = jest.spyOn(wrapper.vm, "removeFocusTrapEvents");
     wrapper.unmount();
     expect(removeEvents).toHaveBeenCalled();
   });

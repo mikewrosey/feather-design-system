@@ -1,13 +1,15 @@
-module.exports = {
-  testEnvironment: "jsdom",
 
-  moduleFileExtensions: ["js", "jsx", "json", "vue"],
+
+module.exports = {
+  testEnvironment: 'jsdom',
+  moduleFileExtensions: ["js", "jsx", "json", "vue","ts","tsx"],
 
   transform: {
-    "^.+\\.vue$": "vue-jest",
+    "^.+\\.vue$": "@vue/vue3-jest",
     ".+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$":
       "jest-transform-stub",
-    "^.+\\.jsx?$": "babel-jest"
+    "^.+\\.jsx?$": "babel-jest",
+    "^.+\\.tsx?$": "ts-jest",
   },
 
   transformIgnorePatterns: ["/node_modules/"],
@@ -30,8 +32,6 @@ module.exports = {
     "jest-watch-typeahead/filename",
     "jest-watch-typeahead/testname"
   ],
-
-  testResultsProcessor: "jest-teamcity-reporter",
   collectCoverage: true,
 
   collectCoverageFrom: [

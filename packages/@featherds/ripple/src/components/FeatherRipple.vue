@@ -1,12 +1,13 @@
 <script>
-import { h } from "vue";
-export default {
-  props: {
-    center: {
-      type: Boolean,
-      default: false,
-    },
+import { defineComponent, h } from "vue";
+export const props = {
+  center: {
+    type: Boolean,
+    default: false,
   },
+};
+export default defineComponent({
+  props,
   data() {
     return {
       pressed: false,
@@ -41,12 +42,10 @@ export default {
           const left = $event.pageX;
 
           position = {
-            top: `${
-              top - rect.top - size / 2 - document.documentElement.scrollTop
-            }px`,
-            left: `${
-              left - rect.left - size / 2 - document.documentElement.scrollLeft
-            }px`,
+            top: `${top - rect.top - size / 2 - document.documentElement.scrollTop
+              }px`,
+            left: `${left - rect.left - size / 2 - document.documentElement.scrollLeft
+              }px`,
           };
         }
         this.styles = {
@@ -104,7 +103,7 @@ export default {
   unmounted() {
     this.parent.removeEventListener("click", this.onClick);
   },
-};
+});
 </script>
 <style lang="scss" scoped>
 .ripple {

@@ -19,7 +19,7 @@ describe("MenuFocusLoop directive", () => {
   it("focus next item when down is pressed", () => {
     const el = getElements();
     const links = el.querySelectorAll("li a");
-    spyOn(links[1], "focus");
+    jest.spyOn(links[1], "focus");
     MenuFocusLoop.contentKeyPressed({
       currentTarget: el,
       target: links[0],
@@ -31,7 +31,7 @@ describe("MenuFocusLoop directive", () => {
   it("focus first item when down is pressed and current focus is last item", () => {
     const el = getElements();
     const links = el.querySelectorAll("li a");
-    spyOn(links[0], "focus");
+    jest.spyOn(links[0], "focus");
     MenuFocusLoop.contentKeyPressed({
       currentTarget: el,
       target: links[2],
@@ -43,7 +43,7 @@ describe("MenuFocusLoop directive", () => {
   it("focus previous item when up is pressed", () => {
     const el = getElements();
     const links = el.querySelectorAll("li a");
-    spyOn(links[0], "focus");
+    jest.spyOn(links[0], "focus");
     MenuFocusLoop.contentKeyPressed({
       currentTarget: el,
       target: links[1],
@@ -55,7 +55,7 @@ describe("MenuFocusLoop directive", () => {
   it("focus last item when up is pressed and current focus is first item", () => {
     const el = getElements();
     const links = el.querySelectorAll("li a");
-    spyOn(links[2], "focus");
+    jest.spyOn(links[2], "focus");
     MenuFocusLoop.contentKeyPressed({
       currentTarget: el,
       target: links[0],

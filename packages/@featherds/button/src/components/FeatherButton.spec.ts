@@ -1,11 +1,13 @@
-import FeatherButton from "./FeatherButton.vue";
+import { default as FeatherButton } from "./FeatherButton.vue";
 import { mount } from "@vue/test-utils";
 import axe from "@featherds/utils/test/axe";
-const getWrapper = function (opts) {
-  return mount(FeatherButton, opts);
-};
+// const getWrapper = function (
+//   opts: MountingOptions<Partial<ExtractPropTypes<typeof props>>>
+// ) {
+//   return mount(FeatherButton, opts);
+// };
 
-const hasClass = (el, cl) => {
+const hasClass = (el: Element, cl: string) => {
   expect(el.classList.contains("btn-primary")).toBe("btn-primary" === cl);
   expect(el.classList.contains("btn-secondary")).toBe("btn-secondary" === cl);
   expect(el.classList.contains("btn-text")).toBe("btn-text" === cl);
@@ -16,7 +18,7 @@ describe("FeatherButton.vue", () => {
     const props = {
       primary: true,
     };
-    const wrapper = getWrapper({ props });
+    const wrapper = mount(FeatherButton, { props });
     expect(wrapper.element.tagName).toBe("BUTTON");
     const attrs = wrapper.attributes();
     expect(attrs["type"]).toBe("button");
@@ -26,7 +28,7 @@ describe("FeatherButton.vue", () => {
       primary: true,
     };
     const attrs = { type: "submit" };
-    const wrapper = getWrapper({ props, attrs });
+    const wrapper = mount(FeatherButton, { props, attrs });
     expect(wrapper.element.tagName).toBe("BUTTON");
     const type = wrapper.attributes("type");
     expect(type).toBe("submit");
@@ -36,7 +38,7 @@ describe("FeatherButton.vue", () => {
       primary: true,
       asAnchor: true,
     };
-    const wrapper = getWrapper({ props });
+    const wrapper = mount(FeatherButton, { props });
     expect(wrapper.element.tagName).toBe("A");
     const attrs = wrapper.attributes();
     expect(attrs["role"]).toBe("button");
@@ -45,7 +47,7 @@ describe("FeatherButton.vue", () => {
     const props = {
       primary: true,
     };
-    const wrapper = getWrapper({ props });
+    const wrapper = mount(FeatherButton, { props });
     expect(wrapper.element.classList.contains("btn")).toBe(true);
     hasClass(wrapper.element, "btn-primary");
   });
@@ -53,7 +55,7 @@ describe("FeatherButton.vue", () => {
     const props = {
       fab: true,
     };
-    const wrapper = getWrapper({ props });
+    const wrapper = mount(FeatherButton, { props });
     expect(wrapper.element.classList.contains("btn")).toBe(true);
     expect(wrapper.element.classList.contains("btn-fab")).toBe(true);
     expect(wrapper.element.classList.contains("btn-icon")).toBe(true);
@@ -63,7 +65,7 @@ describe("FeatherButton.vue", () => {
     const props = {
       secondary: true,
     };
-    const wrapper = getWrapper({ props });
+    const wrapper = mount(FeatherButton, { props });
     expect(wrapper.element.classList.contains("btn")).toBe(true);
     hasClass(wrapper.element, "btn-secondary");
   });
@@ -71,7 +73,7 @@ describe("FeatherButton.vue", () => {
     const props = {
       text: true,
     };
-    const wrapper = getWrapper({ props });
+    const wrapper = mount(FeatherButton, { props });
     expect(wrapper.element.classList.contains("btn")).toBe(true);
     hasClass(wrapper.element, "btn-text");
   });
@@ -79,7 +81,7 @@ describe("FeatherButton.vue", () => {
     const props = {
       link: true,
     };
-    const wrapper = getWrapper({ props });
+    const wrapper = mount(FeatherButton, { props });
     expect(wrapper.element.classList.contains("btn")).toBe(true);
     hasClass(wrapper.element, "btn-link");
   });
@@ -91,7 +93,7 @@ describe("FeatherButton.vue", () => {
     const slots = {
       default: { template: "<i id='icon'/>" },
     };
-    const wrapper = getWrapper({ props, slots });
+    const wrapper = mount(FeatherButton, { props, slots });
     const attr = wrapper.attributes();
     expect(wrapper.element.classList.contains("btn-icon")).toBe(true);
     expect(attr["title"]).toBe("label");
@@ -106,7 +108,7 @@ describe("FeatherButton.vue", () => {
     const slots = {
       default: { template: "<i id='icon'/>" },
     };
-    const wrapper = getWrapper({ props, slots });
+    const wrapper = mount(FeatherButton, { props, slots });
     const attr = wrapper.attributes();
     expect(attr["aria-disabled"]).toBe("true");
   });
@@ -122,7 +124,7 @@ describe("FeatherButton.vue", () => {
       onDisabledClick: jest.fn(() => {}),
       onClick: jest.fn(() => {}),
     };
-    const wrapper = getWrapper({ props, slots, attrs });
+    const wrapper = mount(FeatherButton, { props, slots, attrs });
     wrapper.trigger("click");
     expect(attrs.onDisabledClick).toHaveBeenCalled();
     expect(attrs.onClick).not.toHaveBeenCalled();
@@ -135,7 +137,7 @@ describe("FeatherButton.vue", () => {
       const slots = {
         default: { template: "<span>Test</span>" },
       };
-      const wrapper = getWrapper({ slots, props });
+      const wrapper = mount(FeatherButton, { slots, props });
       expect(await axe(wrapper.element)).toHaveNoViolations();
     });
     it("should be accesible with just primary button as anchor", async () => {
@@ -146,7 +148,7 @@ describe("FeatherButton.vue", () => {
       const slots = {
         default: { template: "<span>Test</span>" },
       };
-      const wrapper = getWrapper({ slots, props });
+      const wrapper = mount(FeatherButton, { slots, props });
       expect(await axe(wrapper.element)).toHaveNoViolations();
     });
     it("should be accessible with just primary icon button", async () => {
@@ -157,7 +159,7 @@ describe("FeatherButton.vue", () => {
       const slots = {
         default: { template: "<svg id='icon'/>" },
       };
-      const wrapper = getWrapper({ slots, props });
+      const wrapper = mount(FeatherButton, { slots, props });
       expect(await axe(wrapper.element)).toHaveNoViolations();
     });
     it("should be accessible with just primary icon button as anchor", async () => {
@@ -169,7 +171,7 @@ describe("FeatherButton.vue", () => {
       const slots = {
         default: { template: "<svg id='icon'/>" },
       };
-      const wrapper = getWrapper({ slots, props });
+      const wrapper = mount(FeatherButton, { slots, props });
       expect(await axe(wrapper.element)).toHaveNoViolations();
     });
     it("should be accessible with disabled primary button", async () => {
@@ -180,7 +182,7 @@ describe("FeatherButton.vue", () => {
       const slots = {
         default: { template: "<span>Test</span>" },
       };
-      const wrapper = getWrapper({ slots, props });
+      const wrapper = mount(FeatherButton, { slots, props });
       expect(await axe(wrapper.element)).toHaveNoViolations();
     });
     it("should be accessible with disabled primary button as anchor", async () => {
@@ -192,7 +194,7 @@ describe("FeatherButton.vue", () => {
       const slots = {
         default: { template: "<span>Test</span>" },
       };
-      const wrapper = getWrapper({ slots, props });
+      const wrapper = mount(FeatherButton, { slots, props });
       expect(await axe(wrapper.element)).toHaveNoViolations();
     });
     it("should be accessible with text and icon in primary button", async () => {
@@ -203,7 +205,7 @@ describe("FeatherButton.vue", () => {
         default: { template: "<span>Test</span>" },
         icon: { template: "<svg id='icon'/>" },
       };
-      const wrapper = getWrapper({ slots, props });
+      const wrapper = mount(FeatherButton, { slots, props });
       expect(await axe(wrapper.element)).toHaveNoViolations();
     });
     it("should be accessible with text and icon in primary button as anchor", async () => {
@@ -215,7 +217,7 @@ describe("FeatherButton.vue", () => {
         default: { template: "<span>Test</span>" },
         icon: { template: "<svg id='icon'/>" },
       };
-      const wrapper = getWrapper({ slots, props });
+      const wrapper = mount(FeatherButton, { slots, props });
       expect(await axe(wrapper.element)).toHaveNoViolations();
     });
   });

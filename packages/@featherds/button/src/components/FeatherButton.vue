@@ -1,37 +1,40 @@
-<script>
-import { h } from "vue";
+<script lang="ts">
+import { h, defineComponent, VNode, RendererElement, RendererNode } from "vue";
 import { FeatherRipple } from "@featherds/ripple";
-export default {
-  inheritAttrs: false,
-  props: {
-    primary: {
-      type: Boolean,
-      default: false,
-    },
-    text: {
-      type: Boolean,
-      default: false,
-    },
-    secondary: {
-      type: Boolean,
-      default: false,
-    },
-    icon: {
-      type: String,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-    asAnchor: {
-      type: Boolean,
-      default: false,
-    },
-    onColor: {
-      type: Boolean,
-      default: false,
-    },
+
+export const props = {
+  primary: {
+    type: Boolean,
+    default: false,
   },
+  text: {
+    type: Boolean,
+    default: false,
+  },
+  secondary: {
+    type: Boolean,
+    default: false,
+  },
+  icon: {
+    type: String,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  asAnchor: {
+    type: Boolean,
+    default: false,
+  },
+  onColor: {
+    type: Boolean,
+    default: false,
+  },
+};
+
+export default defineComponent({
+  inheritAttrs: false,
+  props,
   render() {
     const getClasses = () => {
       let buttonClass = "";
@@ -59,7 +62,7 @@ export default {
     };
 
     const tag = this.asAnchor ? "a" : "button";
-    const data = {};
+    const data: Record<string, any> = {};
 
     const _attrs = JSON.parse(JSON.stringify(this.$attrs));
 
@@ -74,7 +77,7 @@ export default {
       data.attrs["aria-disabled"] = "true";
     }
     data.on = {
-      onClick: (e) => {
+      onClick: (e: MouseEvent) => {
         if (this.disabled) {
           this.$emit("disabled-click", e);
         } else {
@@ -90,7 +93,7 @@ export default {
       data.class.push("has-icon");
     }
 
-    let ripple = h(FeatherRipple);
+    let ripple: VNode<RendererNode, RendererElement, { [key: string]: any; }> | undefined = h(FeatherRipple);
     if (this.disabled) {
       ripple = undefined;
     }
@@ -114,7 +117,7 @@ export default {
       ripple,
     ]);
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

@@ -91,7 +91,7 @@ describe("FeatherMenu.vue", () => {
       default: [getContent()],
     };
     const wrapper = await getWrapper({ slots });
-    const documentRemove = spyOn(
+    const documentRemove = jest.spyOn(
       document,
       "removeEventListener"
     ).and.callThrough();
@@ -116,14 +116,14 @@ describe("FeatherMenu.vue", () => {
           default: [getContent()],
         };
         const wrapper = await getWrapper({ slots, props: { right: true } });
-        spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").and.returnValue({
+        jest.spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").mockReturnValue({
           height: 100,
           width: 100,
         });
-        spyOn(
+        jest.spyOn(
           wrapper.find("[menu-trigger]").element,
           "getBoundingClientRect"
-        ).and.returnValue({
+        ).mockReturnValue({
           top: 50,
           bottom: 60,
           left: 50,
@@ -142,14 +142,14 @@ describe("FeatherMenu.vue", () => {
         const height = 100;
         const width = 100;
         const windowHeight = window.innerHeight;
-        spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").and.returnValue({
+        jest.spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").mockReturnValue({
           height,
           width,
         });
-        spyOn(
+        jest.spyOn(
           wrapper.find("[menu-trigger]").element,
           "getBoundingClientRect"
-        ).and.returnValue({
+        ).mockReturnValue({
           top: windowHeight - height,
           bottom: windowHeight - height + 10,
           left: 50,
@@ -167,14 +167,14 @@ describe("FeatherMenu.vue", () => {
         const wrapper = await getWrapper({ slots, props: { right: true } });
         const height = 100;
         const width = 100;
-        spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").and.returnValue({
+        jest.spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").mockReturnValue({
           height,
           width,
         });
-        spyOn(
+        jest.spyOn(
           wrapper.find("[menu-trigger]").element,
           "getBoundingClientRect"
-        ).and.returnValue({
+        ).mockReturnValue({
           top: 50,
           bottom: 60,
           left: 10,
@@ -194,14 +194,14 @@ describe("FeatherMenu.vue", () => {
         const width = 100;
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
-        spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").and.returnValue({
+        jest.spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").mockReturnValue({
           height,
           width,
         });
-        spyOn(
+        jest.spyOn(
           wrapper.find("[menu-trigger]").element,
           "getBoundingClientRect"
-        ).and.returnValue({
+        ).mockReturnValue({
           top: 50,
           bottom: windowHeight - 50,
           left: 50,
@@ -221,14 +221,14 @@ describe("FeatherMenu.vue", () => {
         const width = 100;
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
-        spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").and.returnValue({
+        jest.spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").mockReturnValue({
           height,
           width,
         });
-        spyOn(
+        jest.spyOn(
           wrapper.find("[menu-trigger]").element,
           "getBoundingClientRect"
-        ).and.returnValue({
+        ).mockReturnValue({
           top: windowHeight - height,
           bottom: windowHeight - height + 10,
           left: 10,
@@ -246,14 +246,14 @@ describe("FeatherMenu.vue", () => {
           default: [getContent()],
         };
         const wrapper = await getWrapper({ slots });
-        spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").and.returnValue({
+        jest.spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").mockReturnValue({
           height: 100,
           width: 100,
         });
-        spyOn(
+        jest.spyOn(
           wrapper.find("[menu-trigger]").element,
           "getBoundingClientRect"
-        ).and.returnValue({
+        ).mockReturnValue({
           top: 50,
           bottom: 60,
           left: 50,
@@ -272,14 +272,14 @@ describe("FeatherMenu.vue", () => {
         const height = 100;
         const width = 100;
         const windowHeight = window.innerHeight;
-        spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").and.returnValue({
+        jest.spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").mockReturnValue({
           height,
           width,
         });
-        spyOn(
+        jest.spyOn(
           wrapper.find("[menu-trigger]").element,
           "getBoundingClientRect"
-        ).and.returnValue({
+        ).mockReturnValue({
           top: windowHeight - height,
           bottom: windowHeight - height + 10,
           left: 50,
@@ -298,14 +298,14 @@ describe("FeatherMenu.vue", () => {
         const height = 100;
         const width = 100;
         const windowWidth = window.innerWidth;
-        spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").and.returnValue({
+        jest.spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").mockReturnValue({
           height,
           width,
         });
-        spyOn(
+        jest.spyOn(
           wrapper.find("[menu-trigger]").element,
           "getBoundingClientRect"
-        ).and.returnValue({
+        ).mockReturnValue({
           top: 50,
           bottom: 60,
           left: windowWidth - 30,
@@ -325,14 +325,14 @@ describe("FeatherMenu.vue", () => {
         const width = 100;
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
-        spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").and.returnValue({
+        jest.spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").mockReturnValue({
           height,
           width,
         });
-        spyOn(
+        jest.spyOn(
           wrapper.find("[menu-trigger]").element,
           "getBoundingClientRect"
-        ).and.returnValue({
+        ).mockReturnValue({
           top: 50,
           bottom: windowHeight - 50,
           left: 50,
@@ -352,14 +352,14 @@ describe("FeatherMenu.vue", () => {
         const width = 100;
         const windowWidth = window.innerWidth;
         const windowHeight = window.innerHeight;
-        spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").and.returnValue({
+        jest.spyOn(wrapper.vm.$refs.menu, "getBoundingClientRect").mockReturnValue({
           height,
           width,
         });
-        spyOn(
+        jest.spyOn(
           wrapper.find("[menu-trigger]").element,
           "getBoundingClientRect"
-        ).and.returnValue({
+        ).mockReturnValue({
           top: windowHeight - height,
           bottom: windowHeight - height + 10,
           left: windowWidth - 30,
