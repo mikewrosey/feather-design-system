@@ -1,5 +1,5 @@
 declare module "@featherds/input-helper" {
-  import { VueConstructor, default as Vue, ComponentOptions } from "vue";
+  import { defineComponent } from "vue";
   const ActionIcon: ReturnType<typeof defineComponent>;
   const InputWrapper: ReturnType<typeof defineComponent>;
   const InputWrapperMixin: ReturnType<typeof defineComponent>;
@@ -12,6 +12,6 @@ declare module "@featherds/input-helper" {
     InputWrapperMixin,
     InputSubText,
     InputSubTextMixin,
-    InputInheritAttrsMixin
+    InputInheritAttrsMixin,
   };
 }

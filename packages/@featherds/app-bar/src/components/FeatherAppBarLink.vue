@@ -4,10 +4,11 @@
     <FeatherRipple v-if="type === 'round'" center />
   </a>
 </template>
-<script>
+<script lang="ts">
 import { FeatherIcon } from "@featherds/icon";
 import { FeatherRipple } from "@featherds/ripple";
-export default {
+import { defineComponent, onMounted, ref, ComponentPublicInstance } from "vue";
+export default defineComponent({
   props: {
     icon: {
       type: Object,
@@ -24,28 +25,35 @@ export default {
     type: {
       type: String,
       default: "round",
-      validator(v) {
+      validator: (v: string) => {
         return ["round", "home"].indexOf(v) > -1;
       },
     },
   },
-  mounted() {
-    if (this.type === "home" && this.$refs.icon) {
-      const svg = this.$refs.icon.$el;
-      const svgHeight = parseInt(svg.getAttribute("height"), 10);
-      const svgWidth = parseInt(svg.getAttribute("width"), 10);
-      const computedHeight = parseInt(window.getComputedStyle(svg).height, 10);
-      const computedWidth = Math.ceil(
-        1 + (svgWidth / svgHeight) * computedHeight
-      );
-      svg.style.width = `${computedWidth}px`;
-    }
+  setup(props) {
+    const icon = ref<ComponentPublicInstance<HTMLInputElement>>();
+    onMounted(() => {
+      if (props.type === "home" && icon.value) {
+        const svg = icon.value.$el;
+        const svgHeight = parseInt(svg.getAttribute("height"), 10);
+        const svgWidth = parseInt(svg.getAttribute("width"), 10);
+        const computedHeight = parseInt(
+          window.getComputedStyle(svg).height,
+          10
+        );
+        const computedWidth = Math.ceil(
+          1 + (svgWidth / svgHeight) * computedHeight
+        );
+        svg.style.width = `${computedWidth}px`;
+      }
+    });
   },
+
   components: {
     FeatherIcon,
     FeatherRipple,
   },
-};
+});
 </script>
 <style lang="scss" scoped>
 @import "@featherds/styles/themes/variables";
