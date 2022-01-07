@@ -1,9 +1,13 @@
-import { ref, watch, watchEffect, computed, provide } from "vue";
-import { useSelection } from "./Selection";
-const useRadioGroup = (modelValue, emit) => {
-  const radios = ref([]);
-  const currentSelected = ref();
-  const firstElement = ref();
+import { ref, watch, watchEffect, computed, provide, Ref } from "vue";
+import { useSelection, IRadio } from "./Selection";
+
+const useRadioGroup = (
+  modelValue: Ref<unknown>,
+  emit: (type: string, value: unknown) => void
+) => {
+  const radios: Ref<IRadio[]> = ref([]);
+  const currentSelected: Ref<IRadio> = ref();
+  const firstElement: Ref<IRadio | undefined> = ref();
 
   watchEffect(() => {
     if (!radios.value.length) {
@@ -32,7 +36,7 @@ const useRadioGroup = (modelValue, emit) => {
     }
   });
 
-  const select = (radio) => {
+  const select = (radio: IRadio) => {
     if (radio && radio.disabled) {
       return;
     }

@@ -1,7 +1,7 @@
-import { watch, ref, onBeforeUnmount } from "vue";
+import { watch, ref, onBeforeUnmount, Ref } from "vue";
 import { KEYCODES } from "@featherds/utils/keys";
 
-const useCloseOnEsc = (visibleRef) => {
+const useCloseOnEsc = (visibleRef: Ref<boolean>) => {
   const result = ref(false);
   const handleEsc = (e) => {
     if (e.keyCode === KEYCODES.ESCAPE) {

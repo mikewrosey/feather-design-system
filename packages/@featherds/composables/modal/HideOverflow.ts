@@ -1,22 +1,25 @@
-import { watch, onBeforeUnmount, nextTick, onMounted } from "vue";
+import { watch, onBeforeUnmount, nextTick, onMounted, Ref } from "vue";
 
-const hideBodyOverflow = (e) => {
+const hideBodyOverflow = (e: HTMLElement | false) => {
+  if (e === false) {
+    return "hidden";
+  }
   const originalOverflow = e.style.overflow;
   e.style.overflow = "hidden";
   return originalOverflow;
 };
-const resetBodyOverflow = (originalOverflow, element) => {
-  if (originalOverflow !== undefined && element) {
+const resetBodyOverflow = (
+  originalOverflow: string,
+  element: HTMLElement | false
+) => {
+  if (originalOverflow !== undefined && element !== false) {
     element.style.overflow = originalOverflow;
   }
   return undefined;
 };
-const useHideBodyOverflow = (visibleRef) => {
-  let originalOverflow;
-  const element =
-    typeof document !== "undefined"
-      ? document.body
-      : { style: { overflow: "hidden" } };
+const useHideBodyOverflow = (visibleRef: Ref<boolean>) => {
+  let originalOverflow: string;
+  const element = typeof document !== "undefined" ? document.body : false;
 
   onBeforeUnmount(() => resetBodyOverflow(originalOverflow, element));
   onMounted(() =>
@@ -37,13 +40,16 @@ const useHideBodyOverflow = (visibleRef) => {
   );
 };
 
-const useHideRelativeOverflow = (visibleRef, elementRef) => {
-  let originalOverflow;
+const useHideRelativeOverflow = (
+  visibleRef: Ref<boolean>,
+  elementRef: Ref<HTMLElement>
+) => {
+  let originalOverflow: string;
 
   onBeforeUnmount(() =>
     resetBodyOverflow(
       originalOverflow,
-      elementRef.value ? elementRef.value.offsetParent : undefined
+      elementRef.value ? <HTMLElement>elementRef.value.offsetParent : false
     )
   );
   watch(
@@ -51,11 +57,11 @@ const useHideRelativeOverflow = (visibleRef, elementRef) => {
     ([v, e]) => {
       if (v && e) {
         nextTick(() => {
-          originalOverflow = hideBodyOverflow(e.offsetParent);
+          originalOverflow = hideBodyOverflow(<HTMLElement>e.offsetParent);
         });
       } else if (e) {
         //hidden
-        resetBodyOverflow(originalOverflow, e.offsetParent);
+        resetBodyOverflow(originalOverflow, <HTMLElement>e.offsetParent);
       }
     },
     {

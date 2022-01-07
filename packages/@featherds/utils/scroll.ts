@@ -1,8 +1,8 @@
-var toView = function (el, parent) {
+const toView = function (el: HTMLElement, parent: HTMLElement) {
   if (!el || !parent) {
     return;
   }
-  var elHeight = el.getBoundingClientRect().height;
+  let elHeight = el.getBoundingClientRect().height;
   const compStyle = getComputedStyle(el);
   elHeight += parseInt(compStyle["margin-top"], 10);
   elHeight += parseInt(compStyle["margin-bottom"], 10);

@@ -1,4 +1,5 @@
-import { ref, inject, computed, onMounted } from "vue";
+import { ref, inject, computed, onMounted, Ref, ExtractPropTypes } from "vue";
+import { ITabPanel } from "./TabContainer";
 
 const stockProps = {
   id: {
@@ -9,20 +10,18 @@ const stockProps = {
   },
 };
 
-const useTabPanel = (props) => {
+const useTabPanel = (props: ExtractPropTypes<typeof stockProps>) => {
   const selected = ref(false);
-  const panel = ref();
+  const panel: Ref<HTMLElement> = ref();
   const _tab = ref(props.tab);
   const _id = ref(props.id);
 
-  const register = inject("registerPanel");
+  const register = inject<(ITabPanel) => void>("registerPanel");
   let thisEl, parent, index;
   onMounted(() => {
     thisEl = panel.value;
-    parent = thisEl && thisEl.parentNode ? thisEl.parentNode : [];
-    index = thisEl
-      ? Array.prototype.indexOf.call(parent.children, thisEl)
-      : null;
+    parent = thisEl && thisEl.parentElement ? thisEl.parentElement : [];
+    index = thisEl ? Array.prototype.indexOf.call(parent.children, thisEl) : -1;
     register({
       selected,
       id: _id,

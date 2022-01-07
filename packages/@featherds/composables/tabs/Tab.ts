@@ -1,4 +1,5 @@
-import { ref, inject, computed, onMounted } from "vue";
+import { ref, inject, computed, onMounted, Ref, ExtractPropTypes } from "vue";
+import { ITab } from "./TabContainer";
 
 const stockProps = {
   id: {
@@ -13,23 +14,26 @@ const stockProps = {
   },
 };
 
-const useTab = (props) => {
+const useTab = (props: ExtractPropTypes<typeof stockProps>) => {
   const selected = ref(false);
-  const tab = ref();
+  const tab: Ref<HTMLElement> = ref();
   const _controls = ref(props.controls);
   const _id = ref(props.id);
   const focus = () => {
     tab.value.focus();
   };
-  const register = inject("registerTab");
-  let thisEl, parent, childNodes, index;
+  const register = inject<(ITab) => void>("registerTab");
+  let thisEl: HTMLElement,
+    parent: HTMLElement,
+    childNodes: HTMLElement[],
+    index: number;
   onMounted(() => {
     thisEl = tab.value.parentElement;
-    parent = thisEl && thisEl.parentNode ? thisEl.parentNode : [];
-    childNodes = [].filter.call(parent.children, function (el) {
+    parent = thisEl && thisEl.parentElement ? thisEl.parentElement : [];
+    childNodes = [].filter.call(parent.children, function (el: HTMLElement) {
       return el.querySelectorAll("[role=tab]").length;
     });
-    index = thisEl ? [].indexOf.call(childNodes, thisEl) : null;
+    index = thisEl ? [].indexOf.call(childNodes, thisEl) : -1;
     register({
       el: tab.value,
       focus,

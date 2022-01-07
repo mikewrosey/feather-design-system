@@ -1,6 +1,17 @@
-import { computed } from "vue";
+import { computed, Ref } from "vue";
 
-const useSelection = (current, radios, select) => {
+export interface IRadio {
+  first: boolean;
+  focus: () => void;
+  checked: boolean;
+  disabled: boolean;
+  value: unknown;
+}
+const useSelection = (
+  current: Ref<IRadio>,
+  radios: Ref<IRadio[]>,
+  select: (r: IRadio) => void
+) => {
   const notDisabled = computed(() => {
     return radios.value.filter((x) => !x.disabled);
   });

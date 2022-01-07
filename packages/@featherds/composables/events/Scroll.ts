@@ -1,5 +1,5 @@
-import { watch, onBeforeUnmount, ref } from "vue";
-const useScroll = (elementRef, listener) => {
+import { watch, onBeforeUnmount, ref, Ref } from "vue";
+const useScroll = (elementRef: Ref<HTMLElement>, listener: () => void) => {
   const active = ref(false);
   let ticking = false;
   const scrollHandler = () => {

@@ -1,6 +1,9 @@
-import { watch, onBeforeUnmount, ref, onMounted } from "vue";
+import { watch, onBeforeUnmount, ref, onMounted, Ref } from "vue";
 
-const useOutsideClick = (elementRef, listener) => {
+const useOutsideClick = (
+  elementRef: Ref<HTMLElement>,
+  listener: () => void
+) => {
   const active = ref(false);
   const windowBlurChecker = (e) => {
     if (e.target === window) {

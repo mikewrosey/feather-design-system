@@ -1,4 +1,4 @@
-var translateKey = {
+const translateKey = {
   props: {
     translationKey: {
       type: String,

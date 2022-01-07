@@ -1,4 +1,4 @@
-var KEYCODES = {
+const KEYCODES = {
   PAGEUP: 33,
   PAGEDOWN: 34,
   UP: 38,

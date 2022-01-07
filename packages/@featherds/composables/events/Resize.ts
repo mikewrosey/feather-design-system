@@ -1,5 +1,5 @@
 import { watch, onBeforeUnmount, ref, onMounted } from "vue";
-const useResize = (listener) => {
+const useResize = (listener: () => void) => {
   const active = ref(false);
   let ticking = false;
   const resizeHandler = () => {

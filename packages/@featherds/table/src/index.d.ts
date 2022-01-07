@@ -1,5 +1,5 @@
 declare module "@featherds/table" {
-  import { defineComponent, Directive } from "vue";
+  import { DefineComponent, Directive } from "vue";
   const FeatherSortHeader: DefineComponent;
   let RowAction: Directive;
   export { FeatherSortHeader, RowAction };

@@ -1,14 +1,10 @@
-import { watch } from "vue";
+import { watch, Ref } from "vue";
 
-/**
- * When visible is set to false it will try focus the triggering element.
- * @param {Ref<Boolean>} visibleRef
- */
-const useRestoreFocus = (visibleRef) => {
-  let focusAfterClosed;
+const useRestoreFocus = (visibleRef: Ref<boolean>) => {
+  let focusAfterClosed: HTMLElement | undefined;
   watch(visibleRef, (v) => {
     if (v) {
-      focusAfterClosed = document.activeElement;
+      focusAfterClosed = document.activeElement as HTMLElement;
     } else {
       //hidden
       setTimeout(() => {

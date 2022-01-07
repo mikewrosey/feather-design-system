@@ -1,4 +1,12 @@
-import { ref, toRef, watch, provide } from "vue";
+import {
+  ref,
+  toRef,
+  watch,
+  provide,
+  ExtractPropTypes,
+  SetupContext,
+  Ref,
+} from "vue";
 import { getSafeId } from "@featherds/utils/id";
 import { KEYCODES } from "@featherds/utils/keys";
 
@@ -18,18 +26,44 @@ const stockProps = {
   },
 };
 
-const useTabContainer = (props, context) => {
+export interface ITab {
+  el: HTMLElement;
+  focus: () => void;
+  disabled: boolean;
+  selected: Ref<boolean>;
+  id: Ref<string>;
+  controls: Ref<string>;
+  index: number;
+}
+
+export interface ITabPanel {
+  el: HTMLElement;
+  selected: Ref<boolean>;
+  id: Ref<string>;
+  tab: Ref<string>;
+  index: number;
+}
+
+export interface ITabPair {
+  tab?: ITab;
+  panel?: ITabPanel;
+}
+
+const useTabContainer = (
+  props: ExtractPropTypes<typeof stockProps>,
+  context: SetupContext
+) => {
   const value = toRef(props, "modelValue");
   const localSelected = ref(props.modelValue);
-  const pairs = ref([]);
+  const pairs: Ref<ITabPair[]> = ref([]);
   watch(value, (v) => {
     activateIndex(v);
   });
 
-  const handleClick = (evt) => {
+  const handleClick = (evt: MouseEvent) => {
     evt.preventDefault();
     pairs.value.some((pair, i) => {
-      if (pair.tab.el.contains(evt.target)) {
+      if (pair.tab.el.contains(evt.target as Node)) {
         selectIndex(i);
         activateIndex(i);
         return true;
@@ -38,7 +72,7 @@ const useTabContainer = (props, context) => {
     });
   };
 
-  const handleKey = (evt) => {
+  const handleKey = (evt: KeyboardEvent) => {
     const isModifiedKeyPress = (e) => {
       return e.shiftKey || e.ctrlKey || e.metaKey || e.altKey;
     };
@@ -84,7 +118,7 @@ const useTabContainer = (props, context) => {
     }
   };
 
-  const selectIndex = (index) => {
+  const selectIndex = (index: number) => {
     pairs.value.forEach(function (pair, i) {
       if (index === i) {
         pair.tab.focus();
@@ -92,7 +126,7 @@ const useTabContainer = (props, context) => {
     });
   };
 
-  const activateIndex = (index) => {
+  const activateIndex = (index: number) => {
     const selected = pairs.value[index];
     //couldnt find selected or tab is disabled
     if (!selected || selected.tab.disabled) {
@@ -100,16 +134,16 @@ const useTabContainer = (props, context) => {
     }
 
     pairs.value.forEach((pair, i) => {
-      pair.tab.selected = index === i;
+      pair.tab.selected.value = index === i;
       if (pair.panel) {
-        pair.panel.selected = index === i;
+        pair.panel.selected.value = index === i;
       }
     });
     localSelected.value = index;
     context.emit("update:modelValue", index);
   };
 
-  const registerTab = (tabVM) => {
+  const registerTab = (tabVM: ITab) => {
     const index = tabVM.index;
     if (index > -1) {
       pairs.value[index] = { ...pairs.value[index], tab: tabVM };
@@ -119,7 +153,7 @@ const useTabContainer = (props, context) => {
   };
   provide("registerTab", registerTab);
 
-  const registerPanel = (tabPanelVM) => {
+  const registerPanel = (tabPanelVM: ITabPanel) => {
     const index = tabPanelVM.index;
     if (index > -1) {
       pairs.value[index] = { ...pairs.value[index], panel: tabPanelVM };
@@ -135,17 +169,17 @@ const useTabContainer = (props, context) => {
       if (panel && tab) {
         const tabId = tab.id || getSafeId("tab");
         const panelId = tab.controls || getSafeId("panel");
-        tab.controls = panelId;
-        tab.id = tabId;
+        tab.controls.value = panelId;
+        tab.id.value = tabId;
         panel.tab = tabId;
         panel.id = panelId;
       }
       if (index === localSelected.value) {
         if (panel) {
-          panel.selected = true;
+          panel.selected.value = true;
         }
         if (tab) {
-          tab.selected = true;
+          tab.selected.value = true;
         }
       }
     });
