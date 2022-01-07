@@ -1,5 +1,5 @@
 declare module "@feather/switch" {
-  import { defineComponent } from "vue";
-  let SwitchRender: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  let SwitchRender: DefineComponent;
   export { SwitchRender };
 }

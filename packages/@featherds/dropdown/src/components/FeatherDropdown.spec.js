@@ -68,6 +68,11 @@ describe("FeatherDropdown.vue", () => {
           default: [getLi(), getLi()],
         };
         const wrapper = getWrapper({ slots });
+        await nextTick();
+        await wrapper.setProps({
+          modelValue: true,
+        });
+        await nextTick();
         jest.spyOn(wrapper.vm.dropdownService, "selectNext");
         await wrapper.find("ul").trigger(`keydown.down`);
         expect(wrapper.vm.dropdownService.selectNext).toHaveBeenCalled();
@@ -78,6 +83,11 @@ describe("FeatherDropdown.vue", () => {
           default: [getLi(), getLi()],
         };
         const wrapper = getWrapper({ slots });
+        await nextTick();
+        await wrapper.setProps({
+          modelValue: true,
+        });
+        await nextTick();
         jest.spyOn(wrapper.vm.dropdownService, "selectNext");
         await wrapper.find("ul").trigger(`keydown.right`);
         expect(wrapper.vm.dropdownService.selectNext).toHaveBeenCalled();
@@ -90,6 +100,11 @@ describe("FeatherDropdown.vue", () => {
           default: [getLi(), getLi()],
         };
         const wrapper = getWrapper({ slots });
+        await nextTick();
+        await wrapper.setProps({
+          modelValue: true,
+        });
+        await nextTick();
         jest.spyOn(wrapper.vm.dropdownService, "selectPrevious");
         await wrapper.find("ul").trigger(`keydown.left`);
         expect(wrapper.vm.dropdownService.selectPrevious).toHaveBeenCalled();
@@ -100,6 +115,11 @@ describe("FeatherDropdown.vue", () => {
           default: [getLi(), getLi()],
         };
         const wrapper = getWrapper({ slots });
+        await nextTick();
+        await wrapper.setProps({
+          modelValue: true,
+        });
+        await nextTick();
         jest.spyOn(wrapper.vm.dropdownService, "selectPrevious");
         await wrapper.find("ul").trigger(`keydown.up`);
         expect(wrapper.vm.dropdownService.selectPrevious).toHaveBeenCalled();
@@ -112,6 +132,11 @@ describe("FeatherDropdown.vue", () => {
         default: [getLi(), getLi()],
       };
       const wrapper = getWrapper({ slots });
+      await nextTick();
+      await wrapper.setProps({
+        modelValue: true,
+      });
+      await nextTick();
       await wrapper.find("ul").trigger("keydown.esc");
       expect(wrapper.vm.localOpen).toBe(false);
     });

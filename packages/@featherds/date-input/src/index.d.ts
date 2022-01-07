@@ -1,5 +1,5 @@
 declare module "@featherds/date-input" {
-  import { defineComponent } from "vue";
-  const FeatherDateInput: ReturnType<typeof defineComponent>;
-  export { FeatherDateInput }
+  import { DefineComponent } from "vue";
+  const FeatherDateInput: DefineComponent;
+  export { FeatherDateInput };
 }

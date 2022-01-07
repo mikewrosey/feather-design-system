@@ -1,6 +1,6 @@
 declare module "@featherds/app-bar" {
-  import { defineComponent } from "vue";
-  const FeatherAppBar: ReturnType<typeof defineComponent>;
-  const FeatherAppBarLink: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherAppBar: DefineComponent;
+  const FeatherAppBarLink: DefineComponent;
   export { FeatherAppBar, FeatherAppBarLink };
 }

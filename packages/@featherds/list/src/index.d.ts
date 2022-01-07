@@ -1,10 +1,10 @@
 declare module "@featherds/list" {
-  import { defineComponent } from "vue";
-  const FeatherList: ReturnType<typeof defineComponent>;
-  const FeatherListItem: ReturnType<typeof defineComponent>;
-  const FeatherListHeader: ReturnType<typeof defineComponent>;
-  const FeatherListSeparator: ReturnType<typeof defineComponent>;
-  const FeatherListSwitch: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherList: DefineComponent;
+  const FeatherListItem: DefineComponent;
+  const FeatherListHeader: DefineComponent;
+  const FeatherListSeparator: DefineComponent;
+  const FeatherListSwitch: DefineComponent;
   export {
     FeatherList,
     FeatherListItem,

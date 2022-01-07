@@ -1,5 +1,5 @@
 declare module "@featherds/input" {
-  import { defineComponent } from "vue";
-  const FeatherInput: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherInput: DefineComponent;
   export { FeatherInput };
 }

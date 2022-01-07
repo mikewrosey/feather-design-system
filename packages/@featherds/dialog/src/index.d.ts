@@ -1,7 +1,7 @@
 declare module "@featherds/dialog" {
-  import { defineComponent } from "vue";
-  const FeatherDialog: ReturnType<typeof defineComponent>;
-  const FocusTrap: ReturnType<typeof defineComponent>;
-  const DialogClose: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherDialog: DefineComponent;
+  const FocusTrap: DefineComponent;
+  const DialogClose: DefineComponent;
   export { FeatherDialog, FocusTrap, DialogClose };
 }

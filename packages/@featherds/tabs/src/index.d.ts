@@ -1,7 +1,7 @@
 declare module "@featherds/tabs" {
-  import { defineComponent } from "vue";
-  const FeatherTab: ReturnType<typeof defineComponent>;
-  const FeatherTabPanel: ReturnType<typeof defineComponent>;
-  const FeatherTabContainer: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherTab: DefineComponent;
+  const FeatherTabPanel: DefineComponent;
+  const FeatherTabContainer: DefineComponent;
   export { FeatherTab, FeatherTabPanel, FeatherTabContainer };
 }

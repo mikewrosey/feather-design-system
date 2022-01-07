@@ -1,5 +1,5 @@
 declare module "@featherds/progress" {
-  import { defineComponent } from "vue";
-  const FeatherSpinner: ReturnType<typeof defineComponent>;
-  export { FeatherSpinner }
+  import { DefineComponent } from "vue";
+  const FeatherSpinner: DefineComponent;
+  export { FeatherSpinner };
 }

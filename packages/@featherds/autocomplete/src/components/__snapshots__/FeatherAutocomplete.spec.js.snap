@@ -4807,7 +4807,7 @@ exports[`Feather Autocomplete multi:specific selection limit should clear warnin
             class="feather-autocomplete-input"
             data-ref-id="feather-input"
             id="feather-autocomplete-input"
-            style="height: 26px; flex-basis: 40px; white-space: nowrap;"
+            style="height: 0px; flex-basis: 100%; white-space: normal;"
             tabindex="0"
           />
         </div>

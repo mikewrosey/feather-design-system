@@ -1,5 +1,5 @@
 declare module "@featherds/megamenu" {
-  import { defineComponent } from "vue";
-  const FeatherMegaMenu: ReturnType<typeof defineComponent>;
-  export { FeatherMegaMenu }
+  import { DefineComponent } from "vue";
+  const FeatherMegaMenu: DefineComponent;
+  export { FeatherMegaMenu };
 }

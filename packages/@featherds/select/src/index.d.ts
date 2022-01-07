@@ -1,5 +1,5 @@
 declare module "@featherds/select" {
-  import { defineComponent } from "vue";
-  const FeatherSelect: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherSelect: DefineComponent;
   export { FeatherSelect };
 }

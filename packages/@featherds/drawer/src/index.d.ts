@@ -1,15 +1,15 @@
 declare module "@featherds/drawer" {
-  import { defineComponent } from "vue";
-  const FeatherDrawer: ReturnType<typeof defineComponent>;
-  const DrawerTab: ReturnType<typeof defineComponent>;
-  const DrawerTabContainer: ReturnType<typeof defineComponent>;
-  const DrawerTabContent: ReturnType<typeof defineComponent>;
-  const DrawerTabSeparator: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherDrawer: DefineComponent;
+  const DrawerTab: DefineComponent;
+  const DrawerTabContainer: DefineComponent;
+  const DrawerTabContent: DefineComponent;
+  const DrawerTabSeparator: DefineComponent;
   export {
     FeatherDrawer,
     DrawerTab,
     DrawerTabContainer,
     DrawerTabContent,
-    DrawerTabSeparator
+    DrawerTabSeparator,
   };
 }

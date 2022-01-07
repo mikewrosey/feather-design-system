@@ -1,5 +1,5 @@
 declare module "@featherds/back-button" {
-  import { defineComponent } from "vue";
-  const FeatherBackButton: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherBackButton: DefineComponent;
   export { FeatherBackButton };
 }

@@ -1,5 +1,5 @@
 declare module "@featherds/expansion" {
-  import { defineComponent } from "vue";
-  const FeatherExpansionPanel: ReturnType<typeof defineComponent>;
-  export { FeatherExpansionPanel }
+  import { DefineComponent } from "vue";
+  const FeatherExpansionPanel: DefineComponent;
+  export { FeatherExpansionPanel };
 }

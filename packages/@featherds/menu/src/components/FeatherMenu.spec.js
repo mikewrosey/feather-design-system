@@ -94,7 +94,7 @@ describe("FeatherMenu.vue", () => {
     const documentRemove = jest.spyOn(
       document,
       "removeEventListener"
-    ).and.callThrough();
+    );
     wrapper.unmount();
     expect(documentRemove).toHaveBeenCalled();
   });

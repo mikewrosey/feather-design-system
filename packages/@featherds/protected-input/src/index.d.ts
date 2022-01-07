@@ -1,5 +1,5 @@
 declare module "@featherds/protected-input" {
-  import { defineComponent } from "vue";
-  const FeatherProtectedInput: ReturnType<typeof defineComponent>;
-  export { FeatherProtectedInput }
+  import { DefineComponent } from "vue";
+  const FeatherProtectedInput: DefineComponent;
+  export { FeatherProtectedInput };
 }

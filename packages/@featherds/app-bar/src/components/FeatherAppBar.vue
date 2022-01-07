@@ -127,7 +127,7 @@ export default defineComponent({
         const { active: canShowExpand, expand } = expander();
         return { canShowExpand, expand };
       }
-      return { canShowExpand: ref(false) };
+      return { canShowExpand: ref(false), expand: () => { } };
     };
 
     return {

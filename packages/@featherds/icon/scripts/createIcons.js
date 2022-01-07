@@ -94,14 +94,14 @@ const moveFeatherIconsToDocs = moveIconsToDocs(FEATHER_DEST_DIR, "Feather");
 const generateTypeDefinitions = async (feather) => {
   const getIconModuleDefinition = (icon) =>
     `declare module "@featherds/icon/${icon.group}/${icon.name}" {
-  import { defineComponent } from "vue";
-  const compModule: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const compModule: DefineComponent;
   export = compModule;
 }
 `;
   const defintionTemplate = `declare module "@featherds/icon" {
-  import { defineComponent } from "vue";
-  const FeatherIcon: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherIcon: DefineComponent;
   export { FeatherIcon };
 }
 ${feather.map(getIconModuleDefinition).join(`

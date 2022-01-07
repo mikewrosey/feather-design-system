@@ -1,5 +1,5 @@
 declare module "@featherds/textarea" {
-  import { defineComponent } from "vue";
-  const FeatherTextarea: ReturnType<typeof defineComponent>;
-  export { FeatherTextarea }
+  import { DefineComponent } from "vue";
+  const FeatherTextarea: DefineComponent;
+  export { FeatherTextarea };
 }

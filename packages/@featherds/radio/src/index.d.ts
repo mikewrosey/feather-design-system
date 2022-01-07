@@ -1,7 +1,7 @@
 declare module "@featherds/radio" {
-  import { defineComponent } from "vue";
-  const FeatherRadio: ReturnType<typeof defineComponent>;
-  const FeatherRadioGroup: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherRadio: DefineComponent;
+  const FeatherRadioGroup: DefineComponent;
 
   const useRadioGroup: (
     modelValue: any,

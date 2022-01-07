@@ -1,5 +1,5 @@
 declare module "@featherds/app-layout" {
-  import { defineComponent } from "vue";
-  const FeatherAppLayout: ReturnType<typeof defineComponent>;
+  import { DefineComponent } from "vue";
+  const FeatherAppLayout: DefineComponent;
   export { FeatherAppLayout };
 }

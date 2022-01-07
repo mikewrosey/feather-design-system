@@ -16,12 +16,9 @@
     "types": ["jest"]
   },
   "include": [
-    "packages/@featherds/*/src/**/*.ts",
+    "packages/@featherds/*/src/index.ts",
     "shims/*.d.ts",
-    "packages/@featherds/**/*.d.ts",
-    "packages/@featherds/*/src/**/*.d.ts",
-    "packages/@featherds/*/src/**/*.tsx",
-    "packages/@featherds/*/src/**/*.vue"
+    "packages/@featherds/**/*.d.ts"
   ],
-  "exclude": ["./node_modules/"]
+  "exclude": ["./node_modules/**"]
 }
