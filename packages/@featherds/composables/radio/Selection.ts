@@ -8,14 +8,16 @@ export interface IRadio {
   value: unknown;
 }
 const useSelection = (
-  current: Ref<IRadio>,
+  current: Ref<IRadio | undefined>,
   radios: Ref<IRadio[]>,
   select: (r: IRadio) => void
 ) => {
   const notDisabled = computed(() => {
     return radios.value.filter((x) => !x.disabled);
   });
-  const index = computed(() => notDisabled.value.indexOf(current.value));
+  const index = computed(() =>
+    current.value ? notDisabled.value.indexOf(current.value) : -1
+  );
 
   return {
     selectPrevious() {

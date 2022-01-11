@@ -6,7 +6,7 @@ const useRadioGroup = (
   emit: (type: string, value: unknown) => void
 ) => {
   const radios: Ref<IRadio[]> = ref([]);
-  const currentSelected: Ref<IRadio> = ref();
+  const currentSelected: Ref<IRadio | undefined> = ref();
   const firstElement: Ref<IRadio | undefined> = ref();
 
   watchEffect(() => {
@@ -57,12 +57,12 @@ const useRadioGroup = (
   });
   const selection = useSelection(currentHighlight, radios, select);
 
-  const register = (radio) => {
+  const register = (radio: IRadio) => {
     radios.value = [...radios.value, radio];
   };
   provide("register", register);
   provide("select", select);
-  provide("blur", (e) => {
+  provide("blur", (e: FocusEvent) => {
     emit("blur", e);
   });
   const focus = () => {
@@ -71,7 +71,7 @@ const useRadioGroup = (
     }
   };
 
-  const keydown = (e) => {
+  const keydown = (e: KeyboardEvent) => {
     switch (e.keyCode) {
       case 13:
       case 32:

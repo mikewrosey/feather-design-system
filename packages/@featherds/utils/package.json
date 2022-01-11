@@ -5,10 +5,11 @@
     "access": "public"
   },
   "author": "NantHealth",
-  "scripts": {},
+  "scripts": {
+    "compile": "tsc --declaration"
+  },
   "keywords": [
     "vue",
     "FeatherUtils"
-  ],
-  "types": "./src/index.d.ts"
+  ]
 }

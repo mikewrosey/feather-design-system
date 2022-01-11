@@ -1,9 +1,10 @@
-const { configureAxe } = require("jest-axe");
-const chalk = require("chalk");
-const { printReceived, matcherHint } = require("jest-matcher-utils");
+import { configureAxe } from "jest-axe";
+import { AxeResults, Result } from "axe-core";
+import chalk from "chalk";
+import { printReceived, matcherHint } from "jest-matcher-utils";
 
 const toHaveNoViolations = {
-  toHaveNoViolations(results) {
+  toHaveNoViolations(results: AxeResults) {
     if (typeof results.violations === "undefined") {
       throw new Error("No violations found in aXe results object");
     }
@@ -12,7 +13,7 @@ const toHaveNoViolations = {
       results.incomplete.filter((x) => x.impact === "critical")
     );
 
-    const reporter = (violations) => {
+    const reporter = (violations: Result[]) => {
       if (violations.length === 0) {
         return [];
       }
@@ -21,7 +22,7 @@ const toHaveNoViolations = {
       const horizontalLine = "\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500";
 
       return violations
-        .map((violation) => {
+        .map((violation: Result) => {
           const errorBody = violation.nodes
             .map((node) => {
               const selector = node.target.join(", ");
@@ -36,7 +37,7 @@ const toHaveNoViolations = {
                 lineBreak +
                 printReceived(`${violation.help} (${violation.id})`) +
                 lineBreak +
-                chalk.yellow(node.failureSummary) +
+                chalk.yellow(node.failureSummary || "") +
                 lineBreak +
                 (violation.helpUrl
                   ? `You can find more information on this issue here: \n${chalk.blue(
@@ -66,7 +67,7 @@ const toHaveNoViolations = {
 
     return { actual: violations, message, pass };
   },
-};
+} as jest.ExpectExtendMap;
 
 expect.extend(toHaveNoViolations);
 

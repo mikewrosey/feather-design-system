@@ -2,15 +2,15 @@ import { watch, onBeforeUnmount, ref, onMounted, Ref } from "vue";
 
 const useOutsideClick = (
   elementRef: Ref<HTMLElement>,
-  listener: () => void
+  listener: (e?: FocusEvent) => void
 ) => {
   const active = ref(false);
-  const windowBlurChecker = (e) => {
+  const windowBlurChecker = (e: FocusEvent) => {
     if (e.target === window) {
       listener(e);
     }
   };
-  const outSideClick = (e) => {
+  const outSideClick = (e: FocusEvent) => {
     if (!elementRef.value.contains(e.target)) {
       listener(e);
     }

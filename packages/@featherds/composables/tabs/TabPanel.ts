@@ -12,23 +12,27 @@ const stockProps = {
 
 const useTabPanel = (props: ExtractPropTypes<typeof stockProps>) => {
   const selected = ref(false);
-  const panel: Ref<HTMLElement> = ref();
+  const panel: Ref<HTMLElement | undefined> = ref();
   const _tab = ref(props.tab);
   const _id = ref(props.id);
 
   const register = inject<(ITabPanel) => void>("registerPanel");
-  let thisEl, parent, index;
   onMounted(() => {
-    thisEl = panel.value;
-    parent = thisEl && thisEl.parentElement ? thisEl.parentElement : [];
-    index = thisEl ? Array.prototype.indexOf.call(parent.children, thisEl) : -1;
-    register({
-      selected,
-      id: _id,
-      tab: _tab,
-      el: panel.value,
-      index: index,
-    });
+    if (register) {
+      const thisEl = panel.value;
+      const parent =
+        thisEl && thisEl.parentElement ? thisEl.parentElement : undefined;
+      const index = thisEl
+        ? Array.from(parent ? parent.children : []).indexOf(thisEl)
+        : -1;
+      register({
+        selected,
+        id: _id,
+        tab: _tab,
+        el: panel.value,
+        index: index,
+      });
+    }
   });
 
   const attrs = computed(() => {

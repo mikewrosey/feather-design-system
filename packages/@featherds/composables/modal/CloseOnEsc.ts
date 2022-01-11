@@ -3,7 +3,7 @@ import { KEYCODES } from "@featherds/utils/keys";
 
 const useCloseOnEsc = (visibleRef: Ref<boolean>) => {
   const result = ref(false);
-  const handleEsc = (e) => {
+  const handleEsc = (e: KeyboardEvent) => {
     if (e.keyCode === KEYCODES.ESCAPE) {
       e.preventDefault();
       result.value = !result.value;

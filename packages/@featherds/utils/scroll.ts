@@ -4,8 +4,8 @@ const toView = function (el: HTMLElement, parent: HTMLElement) {
   }
   let elHeight = el.getBoundingClientRect().height;
   const compStyle = getComputedStyle(el);
-  elHeight += parseInt(compStyle["margin-top"], 10);
-  elHeight += parseInt(compStyle["margin-bottom"], 10);
+  elHeight += parseInt(compStyle.getPropertyValue("margin-top"), 10);
+  elHeight += parseInt(compStyle.getPropertyValue("margin-bottom"), 10);
   parent.scrollTop =
     el.offsetTop - parent.getBoundingClientRect().height + elHeight;
 };

@@ -16,33 +16,32 @@ const stockProps = {
 
 const useTab = (props: ExtractPropTypes<typeof stockProps>) => {
   const selected = ref(false);
-  const tab: Ref<HTMLElement> = ref();
+  const tab: Ref<HTMLElement | undefined> = ref();
   const _controls = ref(props.controls);
   const _id = ref(props.id);
   const focus = () => {
     tab.value.focus();
   };
-  const register = inject<(ITab) => void>("registerTab");
-  let thisEl: HTMLElement,
-    parent: HTMLElement,
-    childNodes: HTMLElement[],
-    index: number;
+  const register = inject<(a: ITab) => void>("registerTab");
   onMounted(() => {
-    thisEl = tab.value.parentElement;
-    parent = thisEl && thisEl.parentElement ? thisEl.parentElement : [];
-    childNodes = [].filter.call(parent.children, function (el: HTMLElement) {
-      return el.querySelectorAll("[role=tab]").length;
-    });
-    index = thisEl ? [].indexOf.call(childNodes, thisEl) : -1;
-    register({
-      el: tab.value,
-      focus,
-      disabled: props.disabled,
-      selected,
-      id: _id,
-      controls: _controls,
-      index: index,
-    });
+    if (tab.value && register) {
+      const thisEl = tab.value.parentElement;
+      const parent =
+        thisEl && thisEl.parentElement ? thisEl.parentElement : undefined;
+      const childNodes = Array.from(parent ? parent.children : []).filter(
+        (el) => el.querySelectorAll("[role=tab]").length
+      );
+      const index = thisEl ? childNodes.indexOf(thisEl) : -1;
+      register({
+        el: tab.value,
+        focus,
+        disabled: props.disabled,
+        selected,
+        id: _id,
+        controls: _controls,
+        index: index,
+      });
+    }
   });
 
   const attrs = computed(() => {

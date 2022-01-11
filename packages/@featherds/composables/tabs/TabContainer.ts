@@ -31,16 +31,16 @@ export interface ITab {
   focus: () => void;
   disabled: boolean;
   selected: Ref<boolean>;
-  id: Ref<string>;
-  controls: Ref<string>;
+  id: Ref<string | undefined>;
+  controls: Ref<string | undefined>;
   index: number;
 }
 
 export interface ITabPanel {
-  el: HTMLElement;
+  el: HTMLElement | undefined;
   selected: Ref<boolean>;
-  id: Ref<string>;
-  tab: Ref<string>;
+  id: Ref<string | undefined>;
+  tab: Ref<string | undefined>;
   index: number;
 }
 
@@ -63,7 +63,7 @@ const useTabContainer = (
   const handleClick = (evt: MouseEvent) => {
     evt.preventDefault();
     pairs.value.some((pair, i) => {
-      if (pair.tab.el.contains(evt.target as Node)) {
+      if (pair.tab && pair.tab.el.contains(evt.target as Node)) {
         selectIndex(i);
         activateIndex(i);
         return true;
@@ -73,7 +73,7 @@ const useTabContainer = (
   };
 
   const handleKey = (evt: KeyboardEvent) => {
-    const isModifiedKeyPress = (e) => {
+    const isModifiedKeyPress = (e: KeyboardEvent) => {
       return e.shiftKey || e.ctrlKey || e.metaKey || e.altKey;
     };
 
@@ -85,9 +85,11 @@ const useTabContainer = (
       e.stopPropagation();
       e.preventDefault();
     };
-    const notDisabledPairs = pairs.value.filter((pair) => !pair.tab.disabled);
-    const focusedIndex = pairs.value.findIndex((pair) =>
-      pair.tab.el.contains(document.activeElement)
+    const notDisabledPairs = pairs.value.filter(
+      (pair) => pair.tab && !pair.tab.disabled
+    );
+    const focusedIndex = pairs.value.findIndex(
+      (pair) => pair.tab && pair.tab.el.contains(document.activeElement)
     );
     let index = focusedIndex !== -1 ? focusedIndex : localSelected.value;
     const nextKeys = [KEYCODES.RIGHT];
@@ -120,7 +122,7 @@ const useTabContainer = (
 
   const selectIndex = (index: number) => {
     pairs.value.forEach(function (pair, i) {
-      if (index === i) {
+      if (index === i && pair.tab) {
         pair.tab.focus();
       }
     });
@@ -129,12 +131,14 @@ const useTabContainer = (
   const activateIndex = (index: number) => {
     const selected = pairs.value[index];
     //couldnt find selected or tab is disabled
-    if (!selected || selected.tab.disabled) {
+    if (!selected || (selected.tab && selected.tab.disabled)) {
       return;
     }
 
     pairs.value.forEach((pair, i) => {
-      pair.tab.selected.value = index === i;
+      if (pair.tab) {
+        pair.tab.selected.value = index === i;
+      }
       if (pair.panel) {
         pair.panel.selected.value = index === i;
       }
@@ -167,12 +171,12 @@ const useTabContainer = (
   const linkIds = () => {
     pairs.value.forEach(({ tab, panel }, index) => {
       if (panel && tab) {
-        const tabId = tab.id || getSafeId("tab");
-        const panelId = tab.controls || getSafeId("panel");
+        const tabId = tab.id.value || getSafeId("tab");
+        const panelId = tab.controls.value || getSafeId("panel");
         tab.controls.value = panelId;
         tab.id.value = tabId;
-        panel.tab = tabId;
-        panel.id = panelId;
+        panel.tab.value = tabId;
+        panel.id.value = panelId;
       }
       if (index === localSelected.value) {
         if (panel) {
