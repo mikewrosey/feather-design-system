@@ -44,30 +44,32 @@ const LABELS = {
   expand: "Click to expand",
 };
 
-export default defineComponent({
-  props: {
-    content: {
-      type: String,
-      required: true,
+export const props = {
+  content: {
+    type: String,
+    required: true,
+  },
+  labels: {
+    type: Object as PropType<typeof LABELS>,
+    default: () => {
+      return LABELS;
     },
-    labels: {
-      type: Object as PropType<typeof LABELS>,
-      default: () => {
-        return LABELS;
-      },
-      validator: (v: typeof LABELS) => {
-        return !!v.skip;
-      },
-    },
-    fullWidth: {
-      type: Boolean,
-      default: false,
-    },
-    scrollHide: {
-      type: Boolean,
-      default: false,
+    validator: (v: typeof LABELS) => {
+      return !!v.skip;
     },
   },
+  fullWidth: {
+    type: Boolean,
+    default: false,
+  },
+  scrollHide: {
+    type: Boolean,
+    default: false,
+  },
+};
+
+export default defineComponent({
+  props,
   setup: (props) => {
     const labels = useLabelProperty<typeof LABELS>(
       toRef(props, "labels"),

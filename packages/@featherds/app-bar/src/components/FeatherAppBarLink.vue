@@ -8,28 +8,29 @@
 import { FeatherIcon } from "@featherds/icon";
 import { FeatherRipple } from "@featherds/ripple";
 import { defineComponent, onMounted, ref, ComponentPublicInstance } from "vue";
-export default defineComponent({
-  props: {
-    icon: {
-      type: Object,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
-    url: {
-      type: String,
-      required: true,
-    },
-    type: {
-      type: String,
-      default: "round",
-      validator: (v: string) => {
-        return ["round", "home"].indexOf(v) > -1;
-      },
+export const props = {
+  icon: {
+    type: Object,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  url: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    default: "round",
+    validator: (v: string) => {
+      return ["round", "home"].indexOf(v) > -1;
     },
   },
+}
+export default defineComponent({
+  props,
   setup(props) {
     const icon = ref<ComponentPublicInstance<HTMLInputElement>>();
     onMounted(() => {

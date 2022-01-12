@@ -1,5 +1,5 @@
 import { ref, inject, computed, onMounted, Ref, ExtractPropTypes } from "vue";
-import { ITab } from "./TabContainer";
+import { ITabVM } from "./TabContainer";
 
 const stockProps = {
   id: {
@@ -20,9 +20,11 @@ const useTab = (props: ExtractPropTypes<typeof stockProps>) => {
   const _controls = ref(props.controls);
   const _id = ref(props.id);
   const focus = () => {
-    tab.value.focus();
+    if (tab.value) {
+      tab.value.focus();
+    }
   };
-  const register = inject<(a: ITab) => void>("registerTab");
+  const register = inject<(a: ITabVM) => void>("registerTab");
   onMounted(() => {
     if (tab.value && register) {
       const thisEl = tab.value.parentElement;

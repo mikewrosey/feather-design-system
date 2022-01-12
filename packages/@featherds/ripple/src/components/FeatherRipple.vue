@@ -1,13 +1,13 @@
 <script>
 import { defineComponent, h } from "vue";
-export const props = {
-  center: {
-    type: Boolean,
-    default: false,
-  },
-};
+
 export default defineComponent({
-  props,
+  props: {
+    center: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       pressed: false,

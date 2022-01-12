@@ -19,10 +19,7 @@
         </div>
       </div>
       <div class="app-content">
-        <div
-          class="app-content-container"
-          :class="{ 'full-width': contentLayout === 'full' }"
-        >
+        <div class="app-content-container" :class="{ 'full-width': contentLayout === 'full' }">
           <slot></slot>
         </div>
       </div>
@@ -32,18 +29,18 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { FocusTrap } from "@featherds/dialog";
 import { useCloseOnEsc } from "@featherds/composables/modal/CloseOnEsc";
 import { useRestoreFocus } from "@featherds/composables/modal/RestoreFocus";
 import { useOutsideClick } from "@featherds/composables/events/OutsideClick";
-import { ref, provide, computed, watch, onMounted } from "vue";
-export default {
+import { ref, provide, computed, watch, onMounted, defineComponent } from "vue";
+export default defineComponent({
   props: {
     contentLayout: {
       type: String,
       default: "center",
-      validator(v) {
+      validator: (v: string) => {
         return ["full", "center"].indexOf(v) > -1;
       },
     },
@@ -52,7 +49,7 @@ export default {
     const full = ref(props.contentLayout === "full");
     const _expand = ref(false);
     const active = ref(false);
-    const railContent = ref();
+    const railContent = ref<HTMLElement | undefined>();
     const expanded = computed(() => {
       return active.value && _expand.value;
     });
@@ -92,7 +89,7 @@ export default {
   components: {
     FocusTrap,
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

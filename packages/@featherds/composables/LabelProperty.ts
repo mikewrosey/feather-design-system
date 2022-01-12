@@ -8,13 +8,13 @@ const useLabelProperty = <T>(
   labelRef: Ref<Record<string, string>>,
   defaultLabels: Record<string, string>
 ): Labels<T> => {
-  const result: Labels<T> = <Labels<T>>{};
+  const result: Record<string, ComputedRef<string>> = {};
   Object.keys(defaultLabels).forEach((key) => {
     result[`${key}Label`] = computed(() => {
       return labelRef.value[key] ? labelRef.value[key] : defaultLabels[key];
     });
   });
-  return result;
+  return result as any as Labels<T>;
 };
 
 export { useLabelProperty };

@@ -11,7 +11,7 @@ const useOutsideClick = (
     }
   };
   const outSideClick = (e: FocusEvent) => {
-    if (!elementRef.value.contains(e.target)) {
+    if (!elementRef.value.contains(e.target as HTMLElement)) {
       listener(e);
     }
   };

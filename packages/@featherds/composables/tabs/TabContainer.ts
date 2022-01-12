@@ -26,7 +26,7 @@ const stockProps = {
   },
 };
 
-export interface ITab {
+export interface ITabVM {
   el: HTMLElement;
   focus: () => void;
   disabled: boolean;
@@ -36,11 +36,29 @@ export interface ITab {
   index: number;
 }
 
-export interface ITabPanel {
+interface ITab {
+  el: HTMLElement;
+  focus: () => void;
+  disabled: boolean;
+  selected: boolean;
+  id: string | undefined;
+  controls: string | undefined;
+  index: number;
+}
+
+export interface ITabPanelVM {
   el: HTMLElement | undefined;
   selected: Ref<boolean>;
   id: Ref<string | undefined>;
   tab: Ref<string | undefined>;
+  index: number;
+}
+
+interface ITabPanel {
+  el: HTMLElement | undefined;
+  selected: boolean;
+  id: string | undefined;
+  tab: string | undefined;
   index: number;
 }
 
@@ -81,7 +99,7 @@ const useTabContainer = (
       return;
     }
     const key = evt.keyCode;
-    const stop = (e) => {
+    const stop = (e: Event) => {
       e.stopPropagation();
       e.preventDefault();
     };
@@ -137,30 +155,33 @@ const useTabContainer = (
 
     pairs.value.forEach((pair, i) => {
       if (pair.tab) {
-        pair.tab.selected.value = index === i;
+        pair.tab.selected = index === i;
       }
       if (pair.panel) {
-        pair.panel.selected.value = index === i;
+        pair.panel.selected = index === i;
       }
     });
     localSelected.value = index;
     context.emit("update:modelValue", index);
   };
 
-  const registerTab = (tabVM: ITab) => {
+  const registerTab = (tabVM: ITabVM) => {
     const index = tabVM.index;
     if (index > -1) {
-      pairs.value[index] = { ...pairs.value[index], tab: tabVM };
+      pairs.value[index] = { ...pairs.value[index], tab: tabVM as any as ITab };
       pairs.value = [...pairs.value];
       linkIds();
     }
   };
   provide("registerTab", registerTab);
 
-  const registerPanel = (tabPanelVM: ITabPanel) => {
+  const registerPanel = (tabPanelVM: ITabPanelVM) => {
     const index = tabPanelVM.index;
     if (index > -1) {
-      pairs.value[index] = { ...pairs.value[index], panel: tabPanelVM };
+      pairs.value[index] = {
+        ...pairs.value[index],
+        panel: tabPanelVM as any as ITabPanel,
+      };
       pairs.value = [...pairs.value];
       linkIds();
     }
@@ -171,19 +192,19 @@ const useTabContainer = (
   const linkIds = () => {
     pairs.value.forEach(({ tab, panel }, index) => {
       if (panel && tab) {
-        const tabId = tab.id.value || getSafeId("tab");
-        const panelId = tab.controls.value || getSafeId("panel");
-        tab.controls.value = panelId;
-        tab.id.value = tabId;
-        panel.tab.value = tabId;
-        panel.id.value = panelId;
+        const tabId = tab.id || getSafeId("tab");
+        const panelId = tab.controls || getSafeId("panel");
+        tab.controls = panelId;
+        tab.id = tabId;
+        panel.tab = tabId;
+        panel.id = panelId;
       }
       if (index === localSelected.value) {
         if (panel) {
-          panel.selected.value = true;
+          panel.selected = true;
         }
         if (tab) {
-          tab.selected.value = true;
+          tab.selected = true;
         }
       }
     });

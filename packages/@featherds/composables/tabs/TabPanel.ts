@@ -1,5 +1,5 @@
 import { ref, inject, computed, onMounted, Ref, ExtractPropTypes } from "vue";
-import { ITabPanel } from "./TabContainer";
+import { ITabPanelVM } from "./TabContainer";
 
 const stockProps = {
   id: {
@@ -16,7 +16,7 @@ const useTabPanel = (props: ExtractPropTypes<typeof stockProps>) => {
   const _tab = ref(props.tab);
   const _id = ref(props.id);
 
-  const register = inject<(ITabPanel) => void>("registerPanel");
+  const register = inject<(a: ITabPanelVM) => void>("registerPanel");
   onMounted(() => {
     if (register) {
       const thisEl = panel.value;
