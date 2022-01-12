@@ -6,49 +6,79 @@
   </span>
 </template>
 
-<script>
-import Highlight from "./HighlightMixin";
-import Highlighter from "./HighlighterMixin";
-export default {
-  mixins: [Highlight, Highlighter],
+<script lang="ts">
+import { defineComponent, computed, toRef } from "vue";
+import HighlightProps from "./HighlightProps";
+import HighlighterProps from "./HighlighterProps";
+export default defineComponent({
   props: {
+    ...HighlightProps,
+    ...HighlighterProps,
     text: {
       type: String,
       required: true,
     },
+    highlight: {
+      type: String,
+      default: "off",
+      validator: (v: string) => {
+        // The value must match either
+        return ["off", "ignore-case"].indexOf(v) !== -1;
+      },
+    },
+    query: {
+      type: String,
+    },
   },
-  computed: {
-    index() {
-      if (this.query && this.query.length === 0) {
+  setup(props) {
+    const query = toRef(props, "query");
+    const highlight = toRef(props, "highlight");
+    const text = toRef(props, "text");
+    const index = computed(() => {
+      if (!query.value) {
         return -1;
       }
-      switch (this.highlight.toLowerCase()) {
+      if (query.value && query.value.length === 0) {
+        return -1;
+      }
+      switch (highlight.value.toLowerCase()) {
         case "ignore-case":
-          return this.text.toLowerCase().indexOf(this.query.toLowerCase());
+          return text.value.toLowerCase().indexOf(query.value.toLowerCase());
         default:
           return -1;
       }
-    },
-    beginning() {
-      if (this.index === -1) {
-        return this.text;
+    });
+
+    const beginning = computed(() => {
+      if (index.value === -1) {
+        return text.value;
       }
-      return this.text.slice(0, this.index);
-    },
-    highlighted() {
-      if (this.index === -1) {
+      return text.value.slice(0, index.value);
+    });
+    const highlighted = computed(() => {
+      if (index.value === -1) {
         return;
       }
-      return this.text.slice(this.index, this.index + this.query.length);
-    },
-    end() {
-      if (this.index === -1) {
+      return text.value.slice(
+        index.value,
+        index.value + (query.value ? query.value.length : 0)
+      );
+    });
+    const end = computed(() => {
+      if (index.value === -1) {
         return;
       }
-      return this.text.slice(this.index + this.query.length);
-    },
+      return text.value.slice(
+        index.value + (query.value ? query.value.length : 0)
+      );
+    });
+    return {
+      beginning,
+      highlighted,
+      end,
+    };
   },
-};
+});
 </script>
 <style lang="scss" scoped>
 @import "@featherds/styles/themes/variables";

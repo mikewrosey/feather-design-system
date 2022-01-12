@@ -1,17 +1,35 @@
-import { useResultGrid } from "./ResultGrid";
+import { IAutocompleteGridColumn, useResultGrid } from "./ResultGrid";
 import { KEYCODES } from "@featherds/utils/keys";
 import { nextTick } from "vue";
 import { mount } from "@vue/test-utils";
 
-const LEFTEVENT = { keyCode: KEYCODES.LEFT, preventDefault: () => {} };
-const RIGHTEVENT = { keyCode: KEYCODES.RIGHT, preventDefault: () => {} };
-const DOWNEVENT = { keyCode: KEYCODES.DOWN, preventDefault: () => {} };
-const UPEVENT = { keyCode: KEYCODES.UP, preventDefault: () => {} };
-const HOMEEVENT = { keyCode: KEYCODES.HOME, preventDefault: () => {} };
-const ENDEVENT = { keyCode: KEYCODES.END, preventDefault: () => {} };
-const CTRL = (key) => {
-  key.ctrlKey = true;
-  return key;
+const LEFTEVENT = {
+  keyCode: KEYCODES.LEFT,
+  preventDefault: () => {},
+} as unknown as KeyboardEvent;
+const RIGHTEVENT = {
+  keyCode: KEYCODES.RIGHT,
+  preventDefault: () => {},
+} as unknown as KeyboardEvent;
+const DOWNEVENT = {
+  keyCode: KEYCODES.DOWN,
+  preventDefault: () => {},
+} as unknown as KeyboardEvent;
+const UPEVENT = {
+  keyCode: KEYCODES.UP,
+  preventDefault: () => {},
+} as unknown as KeyboardEvent;
+const HOMEEVENT = {
+  keyCode: KEYCODES.HOME,
+  preventDefault: () => {},
+} as unknown as KeyboardEvent;
+const ENDEVENT = {
+  keyCode: KEYCODES.END,
+  preventDefault: () => {},
+} as unknown as KeyboardEvent;
+const CTRL = (key: KeyboardEvent) => {
+  (key as unknown as Record<string, boolean>).ctrlKey = true;
+  return key as unknown as KeyboardEvent;
 };
 const getResults = () => [
   {
@@ -34,7 +52,7 @@ const getResults = () => [
 const config = [
   { title: "TEXT", prop: "text" },
   { title: "NUMBER", prop: "number", align: "right" },
-];
+] as IAutocompleteGridColumn[];
 const createWrapper = () => {
   return mount({
     template: `<div></div>`,

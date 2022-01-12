@@ -18,9 +18,35 @@
     <slot name="right"></slot>
   </div>
 </template>
-<script>
-import { inject } from "vue";
-export default {
+<script lang="ts">
+import { defineComponent, ExtractPropTypes } from "vue";
+
+export const props = {
+  hint: {
+    type: String,
+  },
+  error: {
+    type: String,
+  },
+};
+
+export const use = (p: ExtractPropTypes<typeof props>) => {
+  const newProps = {} as ExtractPropTypes<typeof props>;
+  let key: keyof typeof props;
+  for (key in props) {
+    if (p[key] !== undefined) {
+      newProps[key] = p[key];
+    }
+  }
+  return { inputSubtTextProps: newProps };
+};
+export const privateProps = {
+  id: {
+    type: String,
+    required: true,
+  },
+};
+export default defineComponent({
   computed: {
     hasContent() {
       const hasRightSlot =
@@ -31,18 +57,8 @@ export default {
       return !!this.error || !!this.hint || hasRightSlot;
     },
   },
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-  },
-  setup() {
-    const options = inject("subTextOptions");
-
-    return options;
-  },
-};
+  props: { ...props, ...privateProps },
+});
 </script>
 <style lang="scss" scoped>
 @import "@featherds/styles/themes/variables";

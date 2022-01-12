@@ -28,9 +28,13 @@ export default {
       default: false,
     },
   },
-  provide() {
+  provide(this: IComponent) {
     return {
       wrapperOptions: this.$props,
     };
   },
 };
+
+interface IComponent {
+  $props: unknown;
+}

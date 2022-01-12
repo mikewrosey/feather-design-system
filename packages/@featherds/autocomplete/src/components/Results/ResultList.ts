@@ -3,14 +3,15 @@ import { KEYCODES } from "@featherds/utils/keys";
 const useResultList = () => {
   const active = reactive({
     row: -1,
+    col: -1,
   });
 
-  const moveMenuIndex = (index) => {
+  const moveMenuIndex = (index: number) => {
     nextTick(() => {
       active.row = index;
     });
   };
-  const handleKeyPress = (e, internalResults) => {
+  const handleKeyPress = (e: KeyboardEvent, internalResults: unknown[]) => {
     //menu navigation
     if (e.keyCode === KEYCODES.DOWN) {
       //down

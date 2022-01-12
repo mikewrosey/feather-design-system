@@ -7,9 +7,13 @@ export default {
       type: String,
     },
   },
-  provide() {
+  provide(this: IComponent) {
     return {
       subTextOptions: this.$props,
     };
   },
 };
+
+interface IComponent {
+  $props: unknown;
+}

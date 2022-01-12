@@ -32,43 +32,83 @@
     </div>
   </div>
 </template>
-<script>
-import ClearIcon from "./ClearIcon";
-import ErrorIcon from "./ErrorIcon";
-import { inject } from "vue";
-export default {
+<script lang="ts">
+import ClearIcon from "./ClearIcon.vue";
+import ErrorIcon from "./ErrorIcon.vue";
+import { defineComponent, ExtractPropTypes } from "vue";
+export const props = {
+  label: {
+    type: String,
+    required: true,
+  },
+  error: {
+    type: String,
+  },
+  clear: {
+    type: String,
+    default: "",
+  },
+  background: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  inline: {
+    type: Boolean,
+    default: false,
+  },
+  hideLabel: {
+    type: Boolean,
+    default: false,
+  },
+};
+export const use = (p: ExtractPropTypes<typeof props>) => {
+  const newProps = {} as ExtractPropTypes<typeof props>;
+  let key: keyof typeof props;
+  for (key in props) {
+    if (p[key] !== undefined) {
+      newProps[key] = p[key] as never;
+    }
+  }
+  return { inputWrapperProps: newProps };
+};
+export const privateProps = {
+  for: {
+    type: String,
+    required: true,
+  },
+  focused: {
+    type: Boolean,
+    default: false,
+  },
+  showClear: {
+    type: Boolean,
+    default: false,
+  },
+  clearText: {
+    type: String,
+  },
+  raised: {
+    type: Boolean,
+    default: false,
+  },
+};
+export default defineComponent({
   emits: ["clear", "wrapper-click"],
   props: {
-    for: {
-      type: String,
-      required: true,
-    },
-    focused: {
-      type: Boolean,
-      default: false,
-    },
-    showClear: {
-      type: Boolean,
-      default: false,
-    },
-    clearText: {
-      type: String,
-    },
-    raised: {
-      type: Boolean,
-      default: false,
-    },
+    ...privateProps,
+    ...props,
   },
   data() {
     return {
       prefixWidth: 0,
-      prefixObserver: null,
+      prefixObserver: null as unknown as MutationObserver,
     };
   },
-  setup() {
-    const options = inject("wrapperOptions");
-    return options;
-  },
+
   computed: {
     computedClearText() {
       if (this.clearText) {
@@ -125,7 +165,7 @@ export default {
     },
   },
   methods: {
-    handleWrapperClick(e) {
+    handleWrapperClick(e: Event) {
       if (!this.disabled) {
         this.$emit("wrapper-click", e);
       }
@@ -155,7 +195,7 @@ export default {
     ClearIcon,
     ErrorIcon,
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
@@ -308,12 +348,10 @@ export default {
     height: 20px;
   }
 }
-.post {
-  :deep(> *) {
-    margin-right: 4px;
-    &:last-child {
-      margin-right: 0px;
-    }
+.post:deep(> *) {
+  margin-right: 4px;
+  &:last-child {
+    margin-right: 0px;
   }
 }
 .feather-input-wrapper {

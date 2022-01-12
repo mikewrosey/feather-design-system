@@ -1,5 +1,5 @@
 <template>
-  <div v-bind="inherittedAttrs" class="feather-autocomplete-container">
+  <div v-bind="inheritAttrs" class="feather-autocomplete-container">
     <FeatherMenu
       no-expand
       :open="showMenu"
@@ -11,12 +11,12 @@
     >
       <template v-slot:trigger>
         <InputWrapper
-          v-bind="comboxBoxAttrs"
+          v-bind="{ ...comboxBoxAttrs, ...inputWrapperProps }"
           :for="inputId"
           :raised="raised"
           :focused="hasFocus"
           :clear-text="clearLabel"
-          :showClear="singleSelect && hasValue"
+          :showClear="showClear"
           @clear="handleClear"
           menu-trigger
           ref="scroll"
@@ -41,7 +41,7 @@
               {{ selectedDescribedByText }}
             </div>
             <Chip
-              v-show="!singleSelect"
+              v-show="!strategy.single"
               v-for="(item, index) in modelValueList"
               :key="item[textProp]"
               role="button"
@@ -51,7 +51,7 @@
               :text="item[textProp]"
               :remove-label="removeLabel"
               :pre="item._pre"
-              @delete="removeFromValue(item)"
+              @delete="strategy.removeItem(item)"
             />
             <textarea
               v-bind="inputAttrs"
@@ -85,7 +85,7 @@
         @select="clickedItem"
         class="autocomplete-results"
         :id="resultsId"
-        :single="singleSelect"
+        :single="strategy.single"
         :new-label="newLabel"
         :highlight="highlight"
         :query="query"
@@ -105,21 +105,21 @@
         @select="clickedItem"
         class="autocomplete-results"
         :id="resultsId"
-        :single="singleSelect"
+        :single="strategy.single"
         :highlight="highlight"
         :query="query"
       />
-      <MenuMessage v-if="showNoResults"
-        ><span data-ref-id="feather-autocomplete-no-results">{{
+      <MenuMessage v-if="showNoResults">
+        <span data-ref-id="feather-autocomplete-no-results">{{
           noResultsLabel
-        }}</span></MenuMessage
-      >
-      <MenuMessage v-if="showSelectionLimit" class="selection-limit-warning"
-        ><FeatherIcon :icon="minCharIcon" /><span
-          data-ref-id="feather-autocomplete-selection-limit"
-          >{{ selectionLimitLabel }}</span
-        ></MenuMessage
-      >
+        }}</span>
+      </MenuMessage>
+      <MenuMessage v-if="showSelectionLimit" class="selection-limit-warning">
+        <FeatherIcon :icon="minCharIcon" />
+        <span data-ref-id="feather-autocomplete-selection-limit">
+          {{ selectionLimitLabel }}
+        </span>
+      </MenuMessage>
       <MenuMessage
         v-if="showMinCharWarning"
         class="min-char-warning"
@@ -127,42 +127,52 @@
       >
         <FeatherIcon :icon="minCharIcon" />
         <span data-ref-id="feather-autocomplete-min-char">
-          <slot name="min-char">{{ computedMinCharText }}</slot>
+          <slot name="min-char">{{ minCharText }}</slot>
         </span>
       </MenuMessage>
       <Spinner v-if="showLoading" />
     </FeatherMenu>
-    <InputSubText :id="subTextId"></InputSubText>
+    <InputSubText :id="subTextId" v-bind="inputSubtTextProps"></InputSubText>
   </div>
 </template>
-<script>
+<script lang="ts">
 import {
   InputWrapper,
-  InputWrapperMixin,
+  useInputWrapper,
+  InputWrapperProps,
   InputSubText,
-  InputSubTextMixin,
-  InputInheritAttrsMixin,
+  useInputSubText,
+  InputSubTextProps,
+  useInheritAttrs,
 } from "@featherds/input-helper";
 import { FeatherIcon } from "@featherds/icon";
 import { FeatherMenu } from "@featherds/menu";
-import Search from "@featherds/icon/action/Search";
-import Info from "@featherds/icon/action/Info";
-import KeyboardArrowDown from "@featherds/icon/navigation/ExpandMore";
-import AutocompleteResults from "./Results/AutocompleteResults";
-import AutocompleteResultsGrid from "./Results/AutocompleteResultsGrid";
-import MenuMessage from "./MenuMessage";
-import Chip from "./Chip";
-import Spinner from "./Spinner";
-import { createStrategy, TYPES } from "./Strategies";
-import { getSafeId } from "@featherds/utils/id";
-import { KEYCODES } from "@featherds/utils/keys";
-import { toView } from "@featherds/utils/scroll";
+
+import AutocompleteResults from "./Results/AutocompleteResults.vue";
+import AutocompleteResultsGrid from "./Results/AutocompleteResultsGrid.vue";
+import MenuMessage from "./MenuMessage.vue";
+import Chip from "./Chip.vue";
+import Spinner from "./Spinner.vue";
 import { useLabelProperty } from "@featherds/composables/LabelProperty";
-import { toRef } from "vue";
+import {
+  defineComponent,
+  toRef,
+  PropType,
+  computed,
+  watch,
+  onMounted,
+} from "vue";
 import { useResultList } from "./Results/ResultList";
-import { useResultGrid } from "./Results/ResultGrid";
-import HighlightMixin from "./Highlight/HighlightMixin";
-import { markRaw } from "vue";
+import { useResultGrid, IAutocompleteGridColumn } from "./Results/ResultGrid";
+import HighlightProps from "./Highlight/HighlightProps";
+import { useSingle, useMulti } from "./Type/";
+import { useIdsAndIcons } from "./IdsAndIcons";
+import { useState } from "./State";
+import { useComboBoxAttrs } from "./ComboBoxAttrs";
+import { useChips } from "./Chips";
+import { useInputListeners } from "./InputListeners";
+import { useDom } from "./Dom";
+import { IAutocompleteItem, TYPES, IAutocompleteType } from "./types";
 
 const LABELS = {
   noResults: "No results found",
@@ -172,570 +182,289 @@ const LABELS = {
   new: "New",
   remove: "Remove",
 };
+export const props = {
+  ...HighlightProps,
+  ...InputWrapperProps,
+  ...InputSubTextProps,
+  modelValue: {
+    type: [Array, Object] as PropType<IAutocompleteItem[] | IAutocompleteItem>,
+  },
+  results: {
+    type: Array as PropType<IAutocompleteItem[]>,
+    default: () => [],
+  },
+  textProp: {
+    type: String as unknown as PropType<keyof IAutocompleteItem>,
+    default: "_text",
+  },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  minChar: {
+    type: Number,
+    default: 0,
+  },
+  allowNew: {
+    type: Boolean,
+    default: false,
+  },
+  selectionLimit: {
+    type: Number,
+  },
+  newMatcher: {
+    type: Function,
+    default: (
+      item: IAutocompleteItem,
+      query: string,
+      comp: { textProp: string }
+    ) => {
+      return (
+        (item[comp.textProp] as string).toLowerCase() === query.toLowerCase()
+      );
+    },
+  },
+  type: {
+    type: String as PropType<keyof typeof TYPES>,
+    required: true,
+    validator: (v: TYPES) => {
+      // The value must match either
+      return [TYPES.multi, TYPES.single].indexOf(v) !== -1;
+    },
+  },
+  labels: {
+    type: Object as PropType<typeof LABELS>,
+    default: () => {
+      return LABELS;
+    },
+  },
+  gridConfig: {
+    type: Array as PropType<IAutocompleteGridColumn[]>,
+  },
+};
 
-export default {
-  mixins: [
-    InputWrapperMixin,
-    InputSubTextMixin,
-    HighlightMixin,
-    InputInheritAttrsMixin,
-  ],
+export default defineComponent({
   model: {
     prop: "modelValue",
     event: "update:modelValue",
   },
   emits: ["update:modelValue", "search", "new"],
-  props: {
-    modelValue: {
-      type: [Array, Object],
-    },
-    results: {
-      type: Array,
-      default: () => [],
-    },
-    textProp: {
-      type: String,
-      default: "_text",
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    minChar: {
-      type: Number,
-      default: 0,
-    },
-    allowNew: {
-      type: Boolean,
-      default: false,
-    },
-    selectionLimit: {
-      type: Number,
-    },
-    newMatcher: {
-      type: Function,
-      default(item, query, comp) {
-        return (
-          item[comp.textProp].toString().toLowerCase() === query.toLowerCase()
-        );
-      },
-    },
-    type: {
-      type: String,
-      required: true,
-      validator(v) {
-        // The value must match either
-        return [TYPES.multi, TYPES.single].indexOf(v) !== -1;
-      },
-    },
-    labels: {
-      type: Object,
-      default() {
-        return LABELS;
-      },
-    },
-    gridConfig: {
-      type: Array,
-    },
-  },
-  data() {
-    const strategy = createStrategy(this, this.type);
-    return {
-      typingTimeout: -1,
-      query: "",
-      strategy,
-      hasFocus: false,
-      activeChipIndex: -1,
-      internalResults: [],
-      forceCloseResults: false,
-      selectionLimitReached: false,
+  props,
+  methods: {},
+  setup(props, context) {
+    const labels = useLabelProperty<typeof LABELS>(
+      toRef(props, "labels"),
+      LABELS
+    );
+    // const inherittedAttrs = useInheritAttrs(context.attrs);
+    const idsAndIcons = useIdsAndIcons();
+    const state = useState(props);
+
+    let chips: ReturnType<typeof useChips> | undefined;
+    let results:
+      | ReturnType<typeof useResultGrid>
+      | ReturnType<typeof useResultList>;
+
+    if (props.gridConfig) {
+      results = useResultGrid(props.gridConfig);
+    } else {
+      results = useResultList();
+    }
+
+    let strategy: IAutocompleteType;
+    if (props.type === TYPES.multi) {
+      strategy = useMulti(state, context);
+      chips = useChips();
+    } else {
+      strategy = useSingle(state, context, results);
+    }
+
+    const dom = useDom(state, chips);
+
+    const emitSearch = () => {
+      if (state.hasFocus.value && !state.selectionLimitReached.value) {
+        if (
+          state.query.value &&
+          state.query.value.length >= state.minChar.value
+        ) {
+          context.emit("search", state.query.value);
+        }
+        if (state.minChar.value <= 0) {
+          context.emit("search", state.query.value || "");
+        }
+        state.internalResults.value = [];
+        results.reset();
+      }
     };
-  },
-  computed: {
-    singleSelect() {
-      return this.type !== TYPES.multi;
-    },
-    raised() {
-      return this.hasValue || this.hasFocus;
-    },
-    hasValue() {
-      return this.strategy.hasValue(this.modelValue);
-    },
 
-    showMenu() {
-      return (
-        (this.showResults ||
-          this.showNoResults ||
-          this.showLoading ||
-          this.showSelectionLimit ||
-          this.showMinCharWarning) &&
-        !this.disabled
-      );
-    },
-    showResults() {
-      if (
-        this.forceCloseResults ||
-        this.selectionLimitReached ||
-        this.showMinCharWarning
-      ) {
-        return false;
-      }
-      return !!(
-        this.hasFocus &&
-        this.internalResults &&
-        this.internalResults.length &&
-        !this.loading
-      );
-    },
+    const { listeners: inputListeners, handleOutsideClick } = useInputListeners(
+      state,
+      dom,
+      emitSearch,
+      strategy,
+      results,
+      chips
+    );
+    const { comboxBoxAttrs, inputAttrs } = useComboBoxAttrs(
+      state,
+      idsAndIcons,
+      results.active,
+      context,
+      !!props.gridConfig,
+      chips
+    );
+    //inputwrappper
+    const raised = computed(
+      () => strategy.hasValue.value || state.hasFocus.value
+    );
+    const showClear = computed(
+      () => strategy.single && strategy.hasValue.value
+    );
 
-    showNoResults() {
-      return (
-        !this.forceCloseResults &&
-        this.hasFocus &&
-        !this.selectionLimitReached &&
-        this.internalResults &&
-        this.internalResults.length === 0 &&
-        this.query &&
-        this.query.length > 0 &&
-        this.query.length >= this.minChar &&
-        !this.loading
-      );
-    },
-
-    showSelectionLimit() {
-      return (
-        !this.forceCloseResults &&
-        this.hasFocus &&
-        this.selectionLimitReached &&
-        !this.loading
-      );
-    },
-    showLoading() {
-      return this.hasFocus && this.loading;
-    },
-    showMinCharWarning() {
-      return (
-        this.minChar > 0 &&
-        !this.selectionLimitReached &&
-        !this.loading &&
-        this.hasFocus &&
-        this.query.length < this.minChar
-      );
-    },
-
-    resultItemId() {
-      return getSafeId("result-item");
-    },
-    activeChipId() {
-      return getSafeId("active-chip");
-    },
-    minCharWarningId() {
-      return getSafeId("min-char-warning");
-    },
-    subTextId() {
-      return getSafeId("feather-autocomplete-description");
-    },
-    inputId() {
-      return getSafeId("feather-autocomplete-input");
-    },
-    resultsId() {
-      return getSafeId("feather-autocomplete-input-results");
-    },
-    selectedDescriptionId() {
-      return getSafeId("feather-autocomplete-input-selected");
-    },
-    searchIcon() {
-      return markRaw(Search);
-    },
-    minCharIcon() {
-      return markRaw(Info);
-    },
-    dropdownIcon() {
-      return markRaw(KeyboardArrowDown);
-    },
-    inputAttrs() {
-      const describedby = [this.selectedDescriptionId, this.subTextId];
-
-      let activeDescendant = "";
-      if (this.activeChipIndex > -1) {
-        activeDescendant = this.activeChipId;
-      }
-      if (this.active.row > -1 && this.showResults) {
-        activeDescendant = this.resultItemId;
-      }
-      if (this.showMinCharWarning) {
-        describedby.push(this.minCharWarningId);
-      }
-
-      return {
-        id: this.inputId,
-        "aria-describedby": describedby.join(" "),
-        "aria-busy": this.loading,
-        "aria-activedescendant": activeDescendant,
-        disabled: this.disabled,
-        "aria-disabled": this.disabled,
-        "aria-autocomplete": "list",
-        autocomplete: "off",
-        readonly: this.disabled ? "readonly" : false,
-        tabindex: this.disabled ? -1 : 0,
-        "aria-controls": this.resultsId,
-        "aria-invalid": this.$attrs["aria-invalid"] || !!this.error,
-      };
-    },
-    inputListeners() {
-      return {
-        input: this.handleTextInput,
-        blur: this.handleInputBlur,
-        focus: this.handleInputFocus,
-        keydown: this.handleInputKeyDown,
-      };
-    },
-    comboxBoxAttrs() {
-      return {
-        role: "combobox",
-        "aria-expanded": this.showResults ? "true" : "false",
-        "aria-haspopup": this.gridConfig ? "grid" : "listbox",
-        "aria-owns": this.resultsId,
-        "aria-label": this.label,
-      };
-    },
-
-    scrollContainer() {
-      return this.$refs.scroll.$el.querySelector(".feather-input-wrapper");
-    },
-    computedMinCharText() {
-      if (this.minCharLabel) {
-        return this.minCharLabel.replace("${min}", this.minChar);
+    const minCharText = computed(() => {
+      if (labels.minCharLabel.value) {
+        return labels.minCharLabel.value.replace(
+          "${min}",
+          props.minChar.toString()
+        );
       }
       return "";
-    },
-    selectedDescribedByText() {
-      if (this.modelValue && this.modelValue.length) {
-        return this.modelValue.map((x) => x[this.textProp]).join(", ");
-      }
-      return "";
-    },
-    allowNewEnabled() {
-      return this.singleSelect && this.allowNew;
-    },
-    modelValueList() {
-      if (this.singleSelect) {
+    });
+    const allowNewEnabled = computed(
+      () => strategy.single && state.allowNew.value
+    );
+    const modelValueList = computed(() => {
+      if (strategy.single) {
         return [];
       }
-      return this.modelValue;
-    },
-  },
-  watch: {
-    activeChipIndex(v) {
-      if (v > -1 && this.scrollContainer) {
-        this.$nextTick(() => {
-          toView(
-            this.$el.querySelector(`#${this.activeChipId}`),
-            this.scrollContainer
-          );
-        });
-      }
-    },
-    query(v) {
-      if (!this.$refs.input) {
-        return;
-      }
-      if (v === this.$refs.input.value) {
-        return;
-      }
-      this.$refs.input.value = v;
-    },
-    modelValue: {
-      handler(v, o) {
-        //when a value is added make sure to scroll input into view
-        if (v && o && v.length > o.length && this.scrollContainer) {
-          this.$nextTick(() => {
-            toView(this.$refs.input, this.scrollContainer);
-          });
-        }
+      return state.modelValue.value as IAutocompleteItem[];
+    });
 
-        this.strategy.handleModelValueChange(v, o);
-
-        //adjust if value is updated but not focused
-        if (!this.hasFocus) {
-          this.adjustTextArea();
-        }
-      },
-      immediate: true,
-    },
-    results(v) {
-      if (!this.singleSelect && !this.gridConfig && v && v.length > 0) {
-        this.selectFirst();
-      }
-      this.forceCloseResults = false; // should no longer force close
+    const selectedDescribedByText = computed(() => {
       if (
-        v &&
-        v.length === 0 &&
-        this.query &&
-        this.query.length > 0 &&
-        !this.allowNewEnabled
+        state.modelValue.value &&
+        (state.modelValue.value as IAutocompleteItem[]).length
       ) {
-        this.setAlert(this.noResultsLabel);
+        return (state.modelValue.value as IAutocompleteItem[])
+          .map((x) => x[state.textProp.value])
+          .join(", ");
       }
-      if (this.allowNewEnabled && this.query.length) {
-        const found = v.some((item) => {
-          return this.newMatcher(item, this.query, this);
-        });
-        if (!found) {
-          v = [
-            {
-              [this.textProp]: this.query,
-              _new: this.query,
-            },
-            ...v,
-          ];
-        }
-      }
+      return "";
+    });
 
-      this.internalResults = v;
-    },
-    showResults(v) {
-      if (v && this.$refs.menu.calculatePosition) {
-        this.$refs.menu.calculatePosition();
+    watch(
+      () => props.results,
+      (v) => {
+        if (!strategy.single && !props.gridConfig && v && v.length > 0) {
+          results.first();
+        }
+        state.forceCloseResults.value = false; // should no longer force close
+        //alert for no results
+        if (
+          v &&
+          v.length === 0 &&
+          state.query.value &&
+          state.query.value.length > 0 &&
+          !allowNewEnabled.value
+        ) {
+          dom.setAlert(labels.noResultsLabel.value);
+        }
+
+        //create new element if allowed.
+        if (allowNewEnabled.value && state.query.value.length) {
+          const found = v.some((item) => {
+            return props.newMatcher(item, state.query.value, {
+              textProp: state.textProp.value,
+            });
+          });
+          if (!found) {
+            v = [
+              {
+                _text: "",
+                [props.textProp]: state.query.value,
+                _new: state.query.value,
+              },
+              ...v,
+            ];
+          }
+        }
+        state.internalResults.value = v;
       }
-    },
-    selectionLimitReached(v) {
+    );
+    watch(state.selectionLimitReached, (v) => {
       if (v) {
-        this.setAlert(this.selectionLimitLabel);
+        dom.setAlert(labels.selectionLimitLabel.value);
       }
-    },
-  },
-  methods: {
-    setAlert(txt) {
-      this.$refs.alert.textContent = txt;
-      setTimeout(() => {
-        this.$refs.alert.textContent = "";
-      }, 100);
-    },
+    });
 
-    emitSearch() {
-      if (this.hasFocus && !this.selectionLimitReached) {
-        if (this.query && this.query.length >= this.minChar) {
-          this.$emit("search", this.query);
-        }
-        if (this.minChar <= 0) {
-          this.$emit("search", this.query || "");
-        }
-        this.internalResults = [];
-        this.resetResultIndex();
+    const handleClear = () => {
+      state.query.value = "";
+      if (dom.input.value) {
+        dom.input.value.focus();
       }
-    },
-    handleClear() {
-      this.query = "";
-      this.$refs.input.focus();
-      this.emitSearch();
-      this.$emit("update:modelValue", undefined);
-    },
-    handleInputFocus() {
-      if (this.disabled) {
+      emitSearch();
+      context.emit("update:modelValue", undefined);
+    };
+    const handleTriggerClick = () => {
+      if (state.disabled.value) {
         return;
       }
-      this.adjustTextArea();
-      if (this.hasFocus) {
-        return;
+      if (dom.input.value) {
+        dom.input.value.focus();
       }
+    };
 
-      this.hasFocus = true;
-      if (this.modelValue && this.singleSelect) {
-        this.$refs.input.select();
-      }
-      // this.cursorToEnd(this.type !== TYPES.multi);
-
-      this.emitSearch();
-    },
-
-    handleTextInput(e) {
-      this.adjustTextArea();
-
-      const str = e.target.value;
-      if (str === undefined) {
-        return;
-      }
-      clearTimeout(this.typingTimeout);
-      this.typingTimeout = setTimeout(() => {
-        this.query = str;
-        this.emitSearch();
-      }, 250);
-    },
-    handleInputKeyDown(e) {
-      const resetChipIndex = () => {
-        this.activeChipIndex = -1;
-      };
-      const resetMenuIndex = () => {
-        this.resetResultIndex();
-      };
-      //stop enter form taking a new line
-      if (e.keyCode === KEYCODES.ENTER) {
-        e.preventDefault();
-      }
-
-      //menu navigation
-      if (this.internalResults && this.internalResults.length) {
-        const handled = this.handleResultNavigation(
-          e,
-          this.internalResults,
-          (i) => this.selectItem(i)
-        );
-        if (handled) {
-          resetChipIndex();
-          this.forceCloseResults = false;
-          return;
-        }
-      }
-
-      if (e.keyCode === KEYCODES.ENTER && this.activeChipIndex > -1) {
-        e.preventDefault();
-        this.removeFromValue(this.modelValue[this.activeChipIndex]);
-        resetChipIndex();
-        return;
-      }
-      if (e.keyCode === KEYCODES.ENTER && this.active.row > -1) {
-        e.preventDefault();
-        this.selectItem(this.internalResults[this.active.row]);
-        return;
-      }
-
-      if (e.keyCode === KEYCODES.ESCAPE) {
-        this.forceCloseResults = true;
-        resetMenuIndex();
-        resetChipIndex();
-        return;
-      }
-      //chip navigation
-      if (!this.query && this.modelValue && this.modelValue.length) {
-        if (e.keyCode === KEYCODES.LEFT) {
-          //left
-          //if nothing selected select first (aka last element in array);
-          e.preventDefault();
-          if (this.activeChipIndex === -1) {
-            resetMenuIndex();
-            this.activeChipIndex = this.modelValue.length - 1;
-          } else if (this.activeChipIndex - 1 >= 0) {
-            resetMenuIndex();
-            this.activeChipIndex = this.activeChipIndex - 1;
-          }
-        }
-        if (e.keyCode === KEYCODES.RIGHT) {
-          //right
-          //if in rightmost chip remove activity from chip list
-          e.preventDefault();
-
-          if (this.activeChipIndex === this.modelValue.length - 1) {
-            resetMenuIndex();
-            this.activeChipIndex = -1;
-          } else if (
-            this.activeChipIndex < this.modelValue.length - 1 &&
-            this.activeChipIndex > -1
-          ) {
-            resetMenuIndex();
-            this.activeChipIndex = this.activeChipIndex + 1;
-          }
-        }
-        if (
-          (e.keyCode === KEYCODES.DELETE || e.keyCode === KEYCODES.BACKSPACE) &&
-          this.activeChipIndex !== -1
-        ) {
-          this.removeFromValue(this.modelValue[this.activeChipIndex]);
-          resetMenuIndex();
-          resetChipIndex();
-        }
-      }
-    },
-    handleTriggerClick() {
-      if (this.disabled) {
-        return;
-      }
-      this.$refs.input.focus();
-    },
-    handleInputBlur() {
-      this.strategy.handleInputBlur();
-      if (this.forceCloseResults || !this.showMenu) {
-        this.handleOutsideClick();
-      }
-    },
-    handleOutsideClick() {
-      this.hasFocus = false;
-      this.forceCloseResults = false;
-      this.activeChipIndex = -1;
-      this.resetResultIndex();
-      this.query = this.strategy.getInitialText();
-      this.internalResults = [];
-      this.adjustTextArea();
-    },
-    clickedItem(item) {
-      this.selectItem(item);
+    const clickedItem = (item: IAutocompleteItem) => {
+      strategy.selectItem(item);
       //clear everything and re focus
-      this.internalResults = [];
-      this.$refs.input.focus();
-      this.strategy.clickedItem();
-    },
-    selectItem(item) {
-      this.strategy.selectItem(item);
-      this.adjustTextArea();
-    },
-    removeFromValue(item) {
-      this.strategy.removeItem(item);
-    },
-    handleDropdownIconClick() {
-      if (this.showMenu) {
-        this.forceCloseResults = true;
-        return;
+      state.internalResults.value = [];
+      if (dom.input.value) {
+        dom.input.value.focus();
       }
-      if (this.forceCloseResults) {
-        this.emitSearch();
+      strategy.clickedItem();
+      if (!strategy.single) {
+        emitSearch();
       }
-    },
-    adjustTextArea() {
-      //auto adjust height
-      const tx = this.$refs.input;
-      //if this is called before mount
-      if (!tx) {
-        return;
-      }
-      tx.style.height = "26px";
-      tx.style.flexBasis = "40px";
-      tx.style.whiteSpace = "nowrap";
+    };
 
-      this.$nextTick(() => {
-        const txWidth = tx.getBoundingClientRect().width;
-        if (
-          tx.scrollWidth <= tx.clientWidth &&
-          txWidth < tx.parentElement.getBoundingClientRect().width
-        ) {
-          tx.style.whiteSpace = "nowrap";
-        } else {
-          tx.style.whiteSpace = "normal";
-          tx.style.flexBasis = "100%";
-        }
-        this.$nextTick(() => {
-          tx.style.height = `${tx.scrollHeight}px`;
-        });
-      });
-    },
-  },
-  setup(props) {
-    const labels = useLabelProperty(toRef(props, "labels"), LABELS);
-    let resultsRender;
-    if (props.gridConfig) {
-      resultsRender = useResultGrid(props.gridConfig);
-    } else {
-      resultsRender = useResultList();
-    }
+    const handleDropdownIconClick = () => {
+      if (state.showMenu.value) {
+        state.forceCloseResults.value = true;
+        return;
+      }
+      if (state.forceCloseResults.value) {
+        emitSearch();
+      }
+    };
+    onMounted(() => dom.adjustTextArea());
+
     return {
       ...labels,
-      active: resultsRender.active,
-      handleResultNavigation: resultsRender.handleKeyPress,
-      resetResultIndex: resultsRender.reset,
-      selectFirst: resultsRender.first,
+      ...idsAndIcons,
+      ...state,
+      ...dom,
+      ...useInputSubText(props),
+      ...useInputWrapper(props),
+      ...useInheritAttrs(context.attrs),
+      activeChipIndex: chips ? chips.activeIndex : -1,
+      activeChipId: chips ? chips.activeId : "",
+      active: results.active,
+      selectFirst: results.first,
+      strategy,
+      inputListeners,
+      comboxBoxAttrs,
+      inputAttrs,
+      raised,
+      showClear,
+      handleClear,
+      minCharText,
+      modelValueList,
+      selectedDescribedByText,
+      clickedItem,
+      handleDropdownIconClick,
+      handleTriggerClick,
+      handleOutsideClick,
     };
-  },
-  mounted() {
-    this.adjustTextArea();
   },
   components: {
     InputWrapper,
@@ -748,7 +477,7 @@ export default {
     FeatherMenu,
     Spinner,
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

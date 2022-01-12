@@ -91,6 +91,7 @@ export default {
       results: [],
       value: undefined,
       val2: { _text: names[0], test: null },
+      error: "something went wrong"
     };
   },
   methods: {

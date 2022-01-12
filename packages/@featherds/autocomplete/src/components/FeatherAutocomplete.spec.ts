@@ -1,8 +1,9 @@
 import FeatherAutocomplete from "./FeatherAutocomplete.vue";
-import { TYPES } from "./Strategies";
-import { shallowMount, mount, config } from "@vue/test-utils";
+import { TYPES, IAutocompleteItem } from "./types";
+import { mount, config } from "@vue/test-utils";
 import * as id from "@featherds/utils/id";
 import axe from "@featherds/utils/test/axe";
+import { getCalls } from "@featherds/utils/test/calls";
 import { nextTick } from "vue";
 
 config.renderStubDefaultSlot = true;
@@ -10,89 +11,72 @@ config.renderStubDefaultSlot = true;
 import "@featherds/input-helper/test/MutationObserver";
 jest.spyOn(id, "getSafeId").mockImplementation((x) => x);
 
-const getProps = (type) => (props) => {
-  return {
-    label: "Users",
-    type,
-    ...props,
-  };
+const getResultsType = (type: TYPES) => (): IAutocompleteItem[] => {
+  return [
+    {
+      _text: "Item 1",
+    },
+    {
+      _text: "Item 2",
+    },
+  ];
 };
-
-const getResultsType = (type) => () => {
-  if (type === TYPES.multi || type === TYPES.single) {
-    return [
-      {
-        _text: "Item 1",
-      },
-      {
-        _text: "Item 2",
-      },
-    ];
-  }
-};
-const getValueType = (type) => () => {
-  if (type === TYPES.multi) {
-    return [
-      {
-        _text: "Item 1",
-      },
-      {
-        _text: "Item 2",
-      },
-    ];
-  }
-  if (type === TYPES.single) {
+const getValueType =
+  (type: TYPES) => (): IAutocompleteItem | IAutocompleteItem[] => {
+    if (type === TYPES.multi) {
+      return [
+        {
+          _text: "Item 1",
+        },
+        {
+          _text: "Item 2",
+        },
+      ];
+    }
     return { _text: "Item 1" };
-  }
-};
-const handleUpdateValueType = (type) => (args) => {
-  if (type === TYPES.multi) {
-    return args[0][0];
-  }
-  if (type === TYPES.single) {
-    return args[0];
-  }
-};
-const getWrapperType = (type) =>
-  function (options = {}) {
-    options.props = getProps(type)(options.props || {});
-    return shallowMount(FeatherAutocomplete, options);
   };
 
-const getFullWrapperType = (type) =>
-  function (options = {}) {
-    options.props = getProps(type)(options.props || {});
-    return mount(FeatherAutocomplete, options);
+const handleUpdateValueType =
+  (type: TYPES) => (args: (IAutocompleteItem | IAutocompleteItem[])[]) => {
+    if (type === TYPES.multi) {
+      const arr = args[0] as IAutocompleteItem[];
+      return arr[0];
+    }
+    return args[0] as IAutocompleteItem;
   };
 
-const baseFunctionality = (type) => {
-  const getFullWrapper = getFullWrapperType(type);
-  const getWrapper = getWrapperType(type);
+const getDefaultPropsType = (type: TYPES) => ({ label: "Users", type });
+const wrapperFn = () => mount(FeatherAutocomplete);
+
+const baseFunctionality = (type: TYPES) => {
+  const defaultProps = getDefaultPropsType(type);
   const getValue = getValueType(type);
   const getResults = getResultsType(type);
   const handleUpdateValue = handleUpdateValueType(type);
   describe(type, () => {
     it("should perform search with empty string when clicked and min char is 0", async () => {
-      const wrapper = getFullWrapper();
+      const wrapper = mount(FeatherAutocomplete, { props: defaultProps });
       await wrapper.find(".feather-autocomplete-input").trigger("click");
       await wrapper.find(".feather-autocomplete-input").trigger("focus");
-      expect(wrapper.emitted("search")[0][0]).toBe("");
+      const emitted = getCalls<[string]>(wrapper, "search");
+      expect(emitted[0][0]).toBe("");
     });
     it("should perform search with empty string when focused and min char is 0", async () => {
-      const wrapper = getFullWrapper();
+      const wrapper = mount(FeatherAutocomplete, { props: defaultProps });
       await wrapper.find(".feather-autocomplete-input").trigger("focus");
-      expect(wrapper.emitted("search")[0][0]).toBe("");
+      const emitted = getCalls<[string]>(wrapper, "search");
+      expect(emitted[0][0]).toBe("");
     });
     it("should not search when clicked an min char is >0", async () => {
-      const wrapper = getFullWrapper({
-        props: { minChar: 3 },
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps, minChar: 3 },
       });
       await wrapper.find(".feather-autocomplete-input").trigger("click");
       expect(wrapper.emitted("search")).toBeUndefined();
     });
     it("should not search when focused an min char is >0", async () => {
-      const wrapper = getFullWrapper({
-        props: { minChar: 3 },
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps, minChar: 3 },
       });
       await wrapper.find(".feather-autocomplete-input").trigger("focus");
       expect(wrapper.emitted("search")).toBeUndefined();
@@ -100,46 +84,54 @@ const baseFunctionality = (type) => {
     it("should perform search with text when characters are entered > min char", async () => {
       jest.useFakeTimers();
 
-      const wrapper = getFullWrapper({
-        props: { minChar: 3 },
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps, minChar: 3 },
       });
       const result = "est";
       const input = wrapper.find(".feather-autocomplete-input");
-      input.element.value = result;
+      (input.element as HTMLInputElement).value = result;
       await input.trigger("input");
       await input.trigger("focus");
       jest.runAllTimers();
-      expect(wrapper.emitted("search")[0][0]).toBe(result);
+      const emitted = getCalls<[string]>(wrapper, "search");
+      expect(emitted[0][0]).toBe(result);
     });
     it("should throttle search queries", async () => {
       jest.useFakeTimers();
 
-      const wrapper = getFullWrapper({
-        props: { minChar: 3 },
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps, minChar: 3 },
       });
       const result = "est";
-      const input = wrapper.find(".feather-autocomplete-input");
+      const input = wrapper.find<HTMLInputElement>(
+        ".feather-autocomplete-input"
+      );
       await input.trigger("focus");
       input.element.value = result;
       await input.trigger("input");
       jest.advanceTimersByTime(100);
       expect(wrapper.emitted("search")).toBeUndefined();
       jest.advanceTimersByTime(200);
-      expect(wrapper.emitted("search")[0][0]).toBe(result);
+      const emitted = getCalls<[string]>(wrapper, "search");
+      expect(emitted[0][0]).toBe(result);
     });
     it("should show loading spinner when search is performed", async () => {
-      const wrapper = getFullWrapper();
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
       await wrapper.find(".feather-autocomplete-input").trigger("focus");
       await wrapper.setProps({
         loading: true,
       });
-      expect(wrapper.wrapperElement).toMatchSnapshot();
+      expect(wrapper.element).toMatchSnapshot();
     });
     it("should show no results text when search returns no results", async () => {
       jest.useFakeTimers();
 
-      const results = [];
-      const wrapper = getFullWrapper();
+      const results = [] as IAutocompleteItem[];
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
       await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
       wrapper.vm.query = "j";
@@ -149,11 +141,13 @@ const baseFunctionality = (type) => {
 
       jest.runAllTimers();
       await nextTick();
-      expect(wrapper.wrapperElement).toMatchSnapshot();
+      expect(wrapper.element).toMatchSnapshot();
       expect(wrapper.vm.showNoResults).toBe(true);
     });
     it("should not leave previous search results visible whilst new search is being performed", async () => {
-      const wrapper = getFullWrapper();
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
       await wrapper.find(".feather-autocomplete-input").trigger("focus");
       await wrapper.setProps({
         results: getResults(),
@@ -161,38 +155,35 @@ const baseFunctionality = (type) => {
       await wrapper.setProps({
         loading: true,
       });
-      expect(wrapper.wrapperElement).toMatchSnapshot();
+      expect(wrapper.element).toMatchSnapshot();
     });
     it("should raise the label when the autocomplete has a value", () => {
-      const wrapper = getFullWrapper({
-        props: {
-          modelValue: getValue(),
-        },
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps, modelValue: getValue() },
       });
-      expect(wrapper.wrapperElement).toMatchSnapshot();
+
+      expect(wrapper.element).toMatchSnapshot();
     });
     it("should lower label when there is no value and autocomplete doesnt have focus", () => {
-      const wrapper = getFullWrapper();
-      expect(wrapper.wrapperElement).toMatchSnapshot();
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
+      expect(wrapper.element).toMatchSnapshot();
     });
 
     describe("disabled state", () => {
       it("should render in a disabled state with no value", () => {
-        const wrapper = getFullWrapper({
-          props: {
-            disabled: true,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, disabled: true },
         });
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
       });
       it("should render in a disabled state with a value", () => {
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue: getValue(),
-            disabled: true,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue: getValue(), disabled: true },
         });
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+
+        expect(wrapper.element).toMatchSnapshot();
       });
     });
     describe("Accessibility", () => {
@@ -200,13 +191,17 @@ const baseFunctionality = (type) => {
 
       it("should be accessible in default state", async () => {
         jest.useRealTimers();
-        const wrapper = getFullWrapper();
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps },
+        });
 
         expect(await axe(wrapper.element)).toHaveNoViolations();
       });
       it("should be accessible in loading state", async () => {
         jest.useRealTimers();
-        const wrapper = getFullWrapper();
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps },
+        });
         await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
         await wrapper.setProps({
@@ -218,7 +213,9 @@ const baseFunctionality = (type) => {
 
       it("should be accessible in minchar state", async () => {
         jest.useRealTimers();
-        const wrapper = getFullWrapper();
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps },
+        });
 
         await wrapper.setProps({
           minChar: 3,
@@ -229,7 +226,9 @@ const baseFunctionality = (type) => {
       it("should be accessible with menu open", async () => {
         jest.useRealTimers();
         const results = getResults();
-        const wrapper = getFullWrapper();
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps },
+        });
         await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
         await wrapper.setProps({
@@ -241,20 +240,17 @@ const baseFunctionality = (type) => {
       it("should be accessible in default state with value", async () => {
         jest.useRealTimers();
         const modelValue = getValue();
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
+
         expect(await axe(wrapper.element)).toHaveNoViolations();
       });
       it("should be accessible with menu open and a value", async () => {
         jest.useRealTimers();
         const results = getResults();
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue: results,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue: results },
         });
         await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
@@ -268,7 +264,9 @@ const baseFunctionality = (type) => {
     describe("menu selection", () => {
       it("should set active descendant when row is active", async () => {
         const results = getResults();
-        const wrapper = getFullWrapper();
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps },
+        });
         await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
         await wrapper.setProps({
@@ -285,16 +283,16 @@ const baseFunctionality = (type) => {
 
       it("should close the menu when escape key is pressed", async () => {
         const results = getResults();
-        const wrapper = getFullWrapper();
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps },
+        });
         await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
         await wrapper.setProps({
           results,
         });
-        await wrapper.setData({
-          active: { row: 0 },
-        });
-
+        wrapper.vm.active.row = 0;
+        await wrapper.vm.$nextTick();
         await wrapper
           .find(".feather-autocomplete-input")
           .trigger("keydown.esc");
@@ -303,7 +301,9 @@ const baseFunctionality = (type) => {
       });
       it("should select an element when enter is pressed on it", async () => {
         const results = getResults();
-        const wrapper = getFullWrapper();
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps },
+        });
         await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
         await wrapper.setProps({
@@ -315,13 +315,18 @@ const baseFunctionality = (type) => {
           .find(".feather-autocomplete-input")
           .trigger("keydown.enter");
         const emitted = handleUpdateValue(
-          wrapper.emitted("update:modelValue")[0]
+          getCalls<[IAutocompleteItem | IAutocompleteItem[]]>(
+            wrapper,
+            "update:modelValue"
+          )[0]
         );
         expect(emitted._text).toBe(results[0]._text);
       });
       it("should select an element when clicked", async () => {
         const results = getResults();
-        const wrapper = getFullWrapper();
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps },
+        });
         await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
         await wrapper.setProps({
@@ -332,11 +337,17 @@ const baseFunctionality = (type) => {
           .findComponent({ ref: "results" })
           .vm.$emit("select", results[0]);
         let emitted = handleUpdateValue(
-          wrapper.emitted("update:modelValue")[0]
+          getCalls<[IAutocompleteItem | IAutocompleteItem[]]>(
+            wrapper,
+            "update:modelValue"
+          )[0]
         );
         expect(emitted._text).toBe(results[0]._text);
         await wrapper.find(".feather-autocomplete-input").trigger("blur");
-        const events = wrapper.emitted("update:modelValue");
+        const events = getCalls<[IAutocompleteItem | IAutocompleteItem[]]>(
+          wrapper,
+          "update:modelValue"
+        );
         emitted = handleUpdateValue(events[events.length - 1]);
         expect(emitted._text).toBe(results[0]._text);
       });
@@ -350,12 +361,14 @@ describe("Feather Autocomplete", () => {
     baseFunctionality(TYPES.single);
   });
   describe("multi:specific", () => {
-    const getFullWrapper = getFullWrapperType(TYPES.multi);
+    const defaultProps = getDefaultPropsType(TYPES.multi);
     const getResults = getResultsType(TYPES.multi);
     const getValue = getValueType(TYPES.multi);
     it("should activate first item in menu on initial load", async () => {
       const results = getResults();
-      const wrapper = getFullWrapper();
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
       await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
       await wrapper.setProps({
@@ -372,12 +385,18 @@ describe("Feather Autocomplete", () => {
 
     it("should leave the menu open when enter is used to select an item", async () => {
       const results = getResults();
-
-      const wrapper = getFullWrapper();
-      const input = wrapper.find(".feather-autocomplete-input");
+      jest.useFakeTimers();
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
+      const input = wrapper.find<HTMLInputElement>(
+        ".feather-autocomplete-input"
+      );
+      await input.trigger("focus");
       const search = "test";
       input.element.value = search;
-      await input.trigger("focus");
+      await input.trigger("input");
+      jest.runAllTimers();
 
       await wrapper.setProps({
         results,
@@ -393,12 +412,10 @@ describe("Feather Autocomplete", () => {
     });
     it("should leave the menu open when enter is used to select an item and minchar set", async () => {
       const results = getResults();
-
-      const wrapper = getFullWrapper({
-        props: {
-          minChar: 2,
-        },
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps, minChar: 2 },
       });
+
       const input = wrapper.find(".feather-autocomplete-input");
       const search = "test";
       wrapper.vm.query = search;
@@ -421,8 +438,13 @@ describe("Feather Autocomplete", () => {
     });
     it("should hide/reset menu and clear text input when it loses focus", async () => {
       jest.useFakeTimers();
-      const wrapper = getFullWrapper();
-      const input = wrapper.find(".feather-autocomplete-input");
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
+      const input = wrapper.find<HTMLInputElement>(
+        ".feather-autocomplete-input"
+      );
+      await input.trigger("focus");
       input.element.value = "test";
       await input.trigger("input");
       await wrapper.setProps({
@@ -432,7 +454,7 @@ describe("Feather Autocomplete", () => {
       jest.runAllTimers();
       await wrapper.find(".feather-autocomplete-input").trigger("blur");
       await nextTick();
-      expect(wrapper.wrapperElement).toMatchSnapshot();
+      expect(wrapper.element).toMatchSnapshot();
     });
 
     describe("chip selection", () => {
@@ -445,16 +467,14 @@ describe("Feather Autocomplete", () => {
             _text: "Test2",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
         await wrapper
           .find(".feather-autocomplete-input")
           .trigger("keydown.left");
         expect(wrapper.vm.activeChipIndex).toBe(modelValue.length - 1);
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
       });
       it("should move chip selection left when left arrow is pressed, so long it is not the left most token", async () => {
         const modelValue = [
@@ -465,10 +485,8 @@ describe("Feather Autocomplete", () => {
             _text: "Test2",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
         await wrapper
           .find(".feather-autocomplete-input")
@@ -477,7 +495,7 @@ describe("Feather Autocomplete", () => {
           .find(".feather-autocomplete-input")
           .trigger("keydown.left");
         expect(wrapper.vm.activeChipIndex).toBe(modelValue.length - 2);
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
       });
       it("should move chip selection right when right arrow is pressed, so long it is not the right most token", async () => {
         const modelValue = [
@@ -488,10 +506,8 @@ describe("Feather Autocomplete", () => {
             _text: "Test2",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
         await wrapper
           .find(".feather-autocomplete-input")
@@ -503,7 +519,7 @@ describe("Feather Autocomplete", () => {
           .find(".feather-autocomplete-input")
           .trigger("keydown.right");
         expect(wrapper.vm.activeChipIndex).toBe(modelValue.length - 1);
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
       });
       it("should not move chip selection when left is pressed on the left most token", async () => {
         const modelValue = [
@@ -514,10 +530,8 @@ describe("Feather Autocomplete", () => {
             _text: "Test2",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
         await wrapper
           .find(".feather-autocomplete-input")
@@ -529,7 +543,7 @@ describe("Feather Autocomplete", () => {
           .find(".feather-autocomplete-input")
           .trigger("keydown.left");
         expect(wrapper.vm.activeChipIndex).toBe(0);
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
       });
       it("should should deselect chip when right arrow is pressed on right most token", async () => {
         const modelValue = [
@@ -540,10 +554,8 @@ describe("Feather Autocomplete", () => {
             _text: "Test2",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
         await wrapper
           .find(".feather-autocomplete-input")
@@ -552,7 +564,7 @@ describe("Feather Autocomplete", () => {
           .find(".feather-autocomplete-input")
           .trigger("keydown.right");
         expect(wrapper.vm.activeChipIndex).toBe(-1);
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
       });
       it("should not perform any chip navigation when there is text", async () => {
         const modelValue = [
@@ -563,12 +575,12 @@ describe("Feather Autocomplete", () => {
             _text: "Test2",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
-        const input = wrapper.find(".feather-autocomplete-input");
+        const input = wrapper.find<HTMLInputElement>(
+          ".feather-autocomplete-input"
+        );
 
         input.element.value = "test";
         await input.trigger("input");
@@ -586,7 +598,7 @@ describe("Feather Autocomplete", () => {
           .find(".feather-autocomplete-input")
           .trigger("keydown.backspace");
         expect(wrapper.vm.activeChipIndex).toBe(-1);
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
       });
       it("should delete a chip when chip is active and delete is pressed", async () => {
         const modelValue = [
@@ -597,10 +609,8 @@ describe("Feather Autocomplete", () => {
             _text: "Test2",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
         await wrapper
           .find(".feather-autocomplete-input")
@@ -608,9 +618,11 @@ describe("Feather Autocomplete", () => {
         await wrapper
           .find(".feather-autocomplete-input")
           .trigger("keydown.delete");
-        expect(wrapper.emitted("update:modelValue")[0][0][0]._text).toBe(
-          modelValue[0]._text
-        );
+        const emitted = getCalls<[IAutocompleteItem[]]>(
+          wrapper,
+          "update:modelValue"
+        )[0][0][0];
+        expect(emitted._text).toBe(modelValue[0]._text);
         expect(wrapper.vm.activeChipIndex).toBe(-1);
       });
       it("should delete a chip when chip is active and backspace is pressed", async () => {
@@ -622,10 +634,8 @@ describe("Feather Autocomplete", () => {
             _text: "Test2",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
         await wrapper
           .find(".feather-autocomplete-input")
@@ -633,9 +643,11 @@ describe("Feather Autocomplete", () => {
         await wrapper
           .find(".feather-autocomplete-input")
           .trigger("keydown.backspace");
-        expect(wrapper.emitted("update:modelValue")[0][0][0]._text).toBe(
-          modelValue[0]._text
-        );
+        const emitted = getCalls<[IAutocompleteItem[]]>(
+          wrapper,
+          "update:modelValue"
+        )[0][0][0];
+        expect(emitted._text).toBe(modelValue[0]._text);
         expect(wrapper.vm.activeChipIndex).toBe(-1);
       });
       it("should not have any active tokens when one is deleted", async () => {
@@ -647,10 +659,8 @@ describe("Feather Autocomplete", () => {
             _text: "Test2",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
         await wrapper
           .find(".feather-autocomplete-input")
@@ -658,9 +668,11 @@ describe("Feather Autocomplete", () => {
         await wrapper
           .find(".feather-autocomplete-input")
           .trigger("keydown.backspace");
-        expect(wrapper.emitted("update:modelValue")[0][0][0]._text).toBe(
-          modelValue[0]._text
-        );
+        const emitted = getCalls<[IAutocompleteItem[]]>(
+          wrapper,
+          "update:modelValue"
+        )[0][0][0];
+        expect(emitted._text).toBe(modelValue[0]._text);
         expect(wrapper.vm.activeChipIndex).toBe(-1);
       });
       it("should delete a chip when the delete x is clicked", async () => {
@@ -672,15 +684,15 @@ describe("Feather Autocomplete", () => {
             _text: "Test2",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
         wrapper.findComponent({ name: "Chip" }).vm.$emit("delete");
-        expect(wrapper.emitted("update:modelValue")[0][0][0]._text).toBe(
-          modelValue[1]._text
-        );
+        const emitted = getCalls<[IAutocompleteItem[]]>(
+          wrapper,
+          "update:modelValue"
+        )[0][0][0];
+        expect(emitted._text).toBe(modelValue[1]._text);
       });
       it("should select rightmost token if left is pressed whilst navigating the menu and there is no search text", async () => {
         const results = [
@@ -699,10 +711,8 @@ describe("Feather Autocomplete", () => {
             _text: "Test21",
           },
         ];
-        const wrapper = getFullWrapper({
-          props: {
-            modelValue,
-          },
+        const wrapper = mount(FeatherAutocomplete, {
+          props: { ...defaultProps, modelValue },
         });
         await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
@@ -715,26 +725,29 @@ describe("Feather Autocomplete", () => {
         expect(wrapper.vm.activeChipIndex).toBe(modelValue.length - 1);
         expect(wrapper.vm.active.row).toBe(-1);
 
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
       });
     });
     describe("selection limit", () => {
       it("should display a warning when selection limit is from initial value and has focus", async () => {
-        const modelValue = getValue();
-        const wrapper = getFullWrapper({
+        const modelValue = getValue() as IAutocompleteItem[];
+        const wrapper = mount(FeatherAutocomplete, {
           props: {
+            ...defaultProps,
             modelValue,
             selectionLimit: modelValue.length,
           },
         });
+
         await wrapper.find(".feather-autocomplete-input").trigger("focus");
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
         expect(wrapper.vm.showSelectionLimit).toBe(true);
       });
       it("should display a warning when selection limit is reached and has focus", async () => {
-        const modelValue = getValue();
-        const wrapper = getFullWrapper({
+        const modelValue = getValue() as IAutocompleteItem[];
+        const wrapper = mount(FeatherAutocomplete, {
           props: {
+            ...defaultProps,
             selectionLimit: modelValue.length,
           },
         });
@@ -743,12 +756,13 @@ describe("Feather Autocomplete", () => {
         await wrapper.setProps({
           modelValue,
         });
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
         expect(wrapper.vm.showSelectionLimit).toBe(true);
       });
       it("should display a warning when selection limit is reached from menu selection", async () => {
-        const wrapper = getFullWrapper({
+        const wrapper = mount(FeatherAutocomplete, {
           props: {
+            ...defaultProps,
             selectionLimit: 1,
           },
         });
@@ -761,33 +775,36 @@ describe("Feather Autocomplete", () => {
         await wrapper
           .find(".feather-autocomplete-input")
           .trigger("keydown.enter");
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        expect(wrapper.element).toMatchSnapshot();
         expect(wrapper.vm.showSelectionLimit).toBe(true);
       });
       it("should clear warning when item is removed", async () => {
-        const modelValue = getValue();
-        const wrapper = getFullWrapper({
+        const modelValue = getValue() as IAutocompleteItem[];
+        const wrapper = mount(FeatherAutocomplete, {
           props: {
-            selectionLimit: modelValue.length,
+            ...defaultProps,
             modelValue,
+            selectionLimit: modelValue.length,
           },
         });
         await wrapper.find(".feather-autocomplete-input").trigger("focus");
         expect(wrapper.vm.showSelectionLimit).toBe(true);
-        wrapper.vm.removeFromValue(modelValue[0]);
-        expect(wrapper.wrapperElement).toMatchSnapshot();
+        wrapper.vm.strategy.removeItem(modelValue[0]);
+        expect(wrapper.element).toMatchSnapshot();
         expect(wrapper.vm.showSelectionLimit).toBe(false);
       });
     });
   });
 
   describe("single:specific", () => {
-    const getFullWrapper = getFullWrapperType(TYPES.single);
+    const defaultProps = getDefaultPropsType(TYPES.single);
     const getResults = getResultsType(TYPES.single);
-    const getValue = getResultsType(TYPES.single);
+    const getValue = getValueType(TYPES.single);
     it("should not activate first item in menu on initial load", async () => {
       const results = getResults();
-      const wrapper = getFullWrapper();
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
       await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
       await wrapper.setProps({
@@ -797,28 +814,38 @@ describe("Feather Autocomplete", () => {
       expect(wrapper.vm.active.row).toBe(-1);
     });
     it("should display value text in the input when a value is selected", async () => {
-      const wrapper = getFullWrapper();
-      const input = wrapper.find(".feather-autocomplete-input");
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
+      const input = wrapper.find<HTMLInputElement>(
+        ".feather-autocomplete-input"
+      ).element;
       expect(input.value).toBeFalsy();
-      const modelValue = getValue();
+      const modelValue = getValue() as IAutocompleteItem;
       await wrapper.setProps({
         modelValue,
       });
       expect(input.value).toBe(modelValue._text);
     });
     it("should display value text in the input when a value is preselected", async () => {
-      const modelValue = getValue();
-      const wrapper = getFullWrapper({
+      const modelValue = getValue() as IAutocompleteItem;
+      const wrapper = mount(FeatherAutocomplete, {
         props: {
+          ...defaultProps,
           modelValue,
         },
       });
-      const input = wrapper.find(".feather-autocomplete-input");
+      const input = wrapper.find<HTMLInputElement>(
+        ".feather-autocomplete-input"
+      ).element;
+      await wrapper.vm.$nextTick();
       expect(input.value).toBe(modelValue._text);
     });
     it("should select the current active menu item on blur", async () => {
       const results = getResults();
-      const wrapper = getFullWrapper();
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
       const input = wrapper.find(".feather-autocomplete-input");
       await input.trigger("focus");
 
@@ -829,27 +856,41 @@ describe("Feather Autocomplete", () => {
       await input.trigger("keydown.down");
       const index = wrapper.vm.active.row;
       await input.trigger("blur");
-      expect(wrapper.emitted("update:modelValue")[0][0]).toStrictEqual(
-        results[index]
-      );
+      const emitted = getCalls<[IAutocompleteItem]>(
+        wrapper,
+        "update:modelValue"
+      )[0][0];
+      expect(emitted).toStrictEqual(results[index]);
     });
     it("should display the current selected value if no new selection is made", async () => {
-      const modelValue = getValue();
-      const wrapper = getFullWrapper({
+      jest.useFakeTimers();
+      const modelValue = getValue() as IAutocompleteItem;
+      const wrapper = mount(FeatherAutocomplete, {
         props: {
+          ...defaultProps,
           modelValue,
         },
       });
-      const input = wrapper.find(".feather-autocomplete-input");
+      const input = wrapper.find<HTMLInputElement>(
+        ".feather-autocomplete-input"
+      );
       await input.trigger("focus");
+
       input.element.value = modelValue._text + "dasdasd";
+      await input.trigger("input");
+      jest.runAllTimers();
+      await nextTick();
+
       await wrapper.find(".feather-autocomplete-input").trigger("blur");
       await nextTick();
-      expect(input.value).toBe(modelValue._text);
+
+      expect(input.element.value).toBe(modelValue._text);
     });
     it("should close menu when enter is pressed on a menu item to select it", async () => {
       const results = getResults();
-      const wrapper = getFullWrapper();
+      const wrapper = mount(FeatherAutocomplete, {
+        props: { ...defaultProps },
+      });
       await wrapper.find(".feather-autocomplete-input").trigger("focus");
 
       await wrapper.setProps({
@@ -859,38 +900,45 @@ describe("Feather Autocomplete", () => {
       await wrapper
         .find(".feather-autocomplete-input")
         .trigger("keydown.enter");
-      expect(wrapper.wrapperElement).toMatchSnapshot();
+      expect(wrapper.element).toMatchSnapshot();
     });
 
     it("should handle a null property on value", async () => {
-      const modelValue = getValue();
+      const modelValue = getValue() as any;
       modelValue.test = null;
-      const wrapper = getFullWrapper({
+      const wrapper = mount(FeatherAutocomplete, {
         props: {
+          ...defaultProps,
           modelValue,
         },
       });
-      expect(wrapper.wrapperElement).toMatchSnapshot();
+      expect(wrapper.element).toMatchSnapshot();
     });
     it("should clear selection when clear icon is clicked", async () => {
       const modelValue = getValue();
-      const wrapper = getFullWrapper({
+      const wrapper = mount(FeatherAutocomplete, {
         props: {
+          ...defaultProps,
           modelValue,
         },
       });
 
       wrapper.vm.handleClear();
       await nextTick();
-      expect(wrapper.emitted("update:modelValue")[0][0]).toBe(undefined);
+      const emitted = getCalls<[IAutocompleteItem]>(
+        wrapper,
+        "update:modelValue"
+      )[0][0];
+      expect(emitted).toBe(undefined);
     });
 
     it("should emit new event when add new element is clicked", async () => {
       jest.useFakeTimers();
 
-      const results = [];
-      const wrapper = getFullWrapper({
+      const results = [] as IAutocompleteItem[];
+      const wrapper = mount(FeatherAutocomplete, {
         props: {
+          ...defaultProps,
           allowNew: true,
         },
       });
@@ -905,14 +953,16 @@ describe("Feather Autocomplete", () => {
       await nextTick();
       const resultsList = wrapper.findComponent({ ref: "results" });
       resultsList.vm.$emit("select", resultsList.vm.items[0]);
-      expect(wrapper.emitted("new")[0][0]).toBe(query);
+      const emitted = getCalls<[string]>(wrapper, "new")[0][0];
+      expect(emitted).toBe(query);
     });
     it("should show add new element when in add-new mode", async () => {
       jest.useFakeTimers();
 
-      const results = [];
-      const wrapper = getFullWrapper({
+      const results = [] as IAutocompleteItem[];
+      const wrapper = mount(FeatherAutocomplete, {
         props: {
+          ...defaultProps,
           allowNew: true,
         },
       });
@@ -925,15 +975,16 @@ describe("Feather Autocomplete", () => {
 
       jest.runAllTimers();
       await nextTick();
-      expect(wrapper.wrapperElement).toMatchSnapshot();
+      expect(wrapper.element).toMatchSnapshot();
       expect(wrapper.vm.showNoResults).toBe(false);
       expect(wrapper.vm.showResults).toBe(true);
     });
     it("should add new item on blur when it is highlighted", async () => {
       jest.useFakeTimers();
       const results = getResults();
-      const wrapper = getFullWrapper({
+      const wrapper = mount(FeatherAutocomplete, {
         props: {
+          ...defaultProps,
           allowNew: true,
         },
       });
@@ -949,7 +1000,8 @@ describe("Feather Autocomplete", () => {
       await wrapper.find(".feather-autocomplete-input").trigger("keydown.down");
       await input.trigger("blur");
       await nextTick();
-      expect(wrapper.emitted("new")[0][0]).toBe(query);
+      const emitted = getCalls<[string]>(wrapper, "new")[0][0];
+      expect(emitted).toBe(query);
     });
   });
 });

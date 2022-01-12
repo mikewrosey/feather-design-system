@@ -11,6 +11,7 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "lib": ["esnext", "dom"],
     "typeRoots": ["./node_modules/@types/", "./packages/@featherds/"],
     "types": ["jest"]

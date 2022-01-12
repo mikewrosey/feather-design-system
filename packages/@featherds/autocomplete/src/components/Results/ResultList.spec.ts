@@ -3,8 +3,14 @@ import Vue from "vue";
 import { nextTick } from "vue";
 import { mount } from "@vue/test-utils";
 import { KEYCODES } from "@featherds/utils/keys";
-const DOWNEVENT = { keyCode: KEYCODES.DOWN, preventDefault: () => {} };
-const UPEVENT = { keyCode: KEYCODES.UP, preventDefault: () => {} };
+const DOWNEVENT = {
+  keyCode: KEYCODES.DOWN,
+  preventDefault: () => {},
+} as unknown as KeyboardEvent;
+const UPEVENT = {
+  keyCode: KEYCODES.UP,
+  preventDefault: () => {},
+} as unknown as KeyboardEvent;
 const getResults = () => [
   {
     _text: "Item 1",

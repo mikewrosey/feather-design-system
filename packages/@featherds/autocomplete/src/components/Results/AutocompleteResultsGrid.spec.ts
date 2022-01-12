@@ -26,77 +26,75 @@ const config = [
   { title: "TEXT", prop: "text" },
   { title: "NUMBER", prop: "number", align: "right" },
 ];
-const getProps = (props) => {
-  return {
-    activeId,
-    config,
-    query: "t",
-    items: items.slice(0),
-    ...props,
-  };
-};
-
-const getWrapper = function (options = {}) {
-  options.props = getProps(options.props || {});
-  return shallowMount(AutocompleteResultsGrid, options);
+const defaultProps = {
+  activeId,
+  config,
+  query: "t",
+  items: items.slice(0),
 };
 
 describe("Autocomplete Results Grid", () => {
   it("should support single select", () => {
-    const wrapper = getWrapper({
+    const wrapper = shallowMount(AutocompleteResultsGrid, {
       props: {
+        ...defaultProps,
         single: true,
         activeRow: -1,
         activeCol: -1,
       },
     });
-    expect(wrapper.wrapperElement).toMatchSnapshot();
+    expect(wrapper.element).toMatchSnapshot();
   });
   it("should support no item active", () => {
-    const wrapper = getWrapper({
+    const wrapper = shallowMount(AutocompleteResultsGrid, {
       props: {
+        ...defaultProps,
         activeRow: -1,
         activeCol: -1,
       },
     });
-    expect(wrapper.wrapperElement).toMatchSnapshot();
+    expect(wrapper.element).toMatchSnapshot();
   });
   it("should support active index being out of range", () => {
-    const wrapper = getWrapper({
+    const wrapper = shallowMount(AutocompleteResultsGrid, {
       props: {
+        ...defaultProps,
         activeRow: items.length + 1,
         activeCol: -1,
       },
     });
-    expect(wrapper.wrapperElement).toMatchSnapshot();
+    expect(wrapper.element).toMatchSnapshot();
   });
   it("should support active index within results range", () => {
-    const wrapper = getWrapper({
+    const wrapper = shallowMount(AutocompleteResultsGrid, {
       props: {
+        ...defaultProps,
         activeRow: 0,
         activeCol: 0,
       },
     });
-    expect(wrapper.wrapperElement).toMatchSnapshot();
+    expect(wrapper.element).toMatchSnapshot();
   });
   it("should mark items as selected that appear in value array", () => {
-    const wrapper = getWrapper({
+    const wrapper = shallowMount(AutocompleteResultsGrid, {
       props: {
+        ...defaultProps,
         activeRow: -1,
         activeCol: -1,
         value: [items[0]],
       },
     });
-    expect(wrapper.wrapperElement).toMatchSnapshot();
+    expect(wrapper.element).toMatchSnapshot();
   });
   it("should mark items as selected that appear in value array and active when active index is set.", () => {
-    const wrapper = getWrapper({
+    const wrapper = shallowMount(AutocompleteResultsGrid, {
       props: {
+        ...defaultProps,
         activeRow: 0,
         activeCol: 0,
         value: [items[0]],
       },
     });
-    expect(wrapper.wrapperElement).toMatchSnapshot();
+    expect(wrapper.element).toMatchSnapshot();
   });
 });

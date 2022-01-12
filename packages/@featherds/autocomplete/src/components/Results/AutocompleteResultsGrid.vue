@@ -11,23 +11,21 @@
     >
       <thead>
         <tr role="row">
-          <th v-for="item in config" :key="item.title">
-            {{ item.title }}
-          </th>
+          <th v-for="item in config" :key="item.title">{{ item.title }}</th>
         </tr>
       </thead>
       <tbody>
         <tr
           role="row"
           v-for="(item, index) in items"
-          :key="item[textProp]"
+          :key="getText(item, textProp)"
           :aria-selected="isSelected(item)"
           :class="{ focus: isActive(index), selected: isSelected(item) }"
-          @click.stop="select(item)"
+          @mousedown.prevent.stop="select(item)"
         >
           <td
             v-for="(col, colIndex) in config"
-            :key="item[textProp] + col.prop"
+            :key="item[textProp] + col.prop.toString()"
             :id="getId(index, colIndex)"
             :class="{ 'focus-cell': isActiveCell(index, colIndex) }"
           >
@@ -35,7 +33,7 @@
               v-if="col.prop === textProp"
               :highlight="highlight"
               :query="query"
-              :text="item[col.prop]"
+              :text="getText(item, col.prop)"
             />
             <p v-else>{{ item[col.prop] }}</p>
           </td>
@@ -44,15 +42,29 @@
     </table>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { toView } from "@featherds/utils/scroll";
-import Highlighter from "../Highlight/Highlighter";
-import HighlightMixin from "../Highlight/HighlightMixin";
-import HighlighterMixin from "../Highlight/HighlighterMixin";
-export default {
-  mixins: [HighlightMixin, HighlighterMixin],
+import Highlighter from "../Highlight/Highlighter.vue";
+import HighlightProps from "../Highlight/HighlightProps";
+import HighlighterProps from "../Highlight/HighlighterProps";
+import {
+  defineComponent,
+  nextTick,
+  PropType,
+  watch,
+  ref,
+  Ref,
+  toRef,
+  computed,
+} from "vue";
+import { IAutocompleteGridColumn } from "./ResultGrid";
+import { IAutocompleteItem } from "../types";
+
+export default defineComponent({
   emits: ["select"],
   props: {
+    ...HighlighterProps,
+    ...HighlightProps,
     activeId: {
       type: String,
       required: true,
@@ -66,15 +78,17 @@ export default {
       required: true,
     },
     items: {
-      type: Array,
+      type: Array as PropType<IAutocompleteItem[]>,
       required: true,
     },
     value: {
-      type: [Array, Object],
+      type: [Array, Object] as PropType<
+        IAutocompleteItem[] | IAutocompleteItem
+      >,
       default: () => [],
     },
     textProp: {
-      type: String,
+      type: String as unknown as PropType<keyof IAutocompleteItem>,
       default: "_text",
     },
     single: {
@@ -82,25 +96,30 @@ export default {
       default: false,
     },
     config: {
-      type: Array,
+      type: Array as PropType<IAutocompleteGridColumn[]>,
       required: true,
     },
   },
-  watch: {
-    activeRow(index) {
-      if (index > -1) {
-        this.$nextTick(() => {
-          const el = Array.prototype.slice.call(
-            this.$el.querySelectorAll("tr")
-          )[index + 1]; //+1 for header
-          toView(el, this.$refs.grid);
-        });
+  setup(props, context) {
+    const grid: Ref<HTMLElement | undefined> = ref();
+    const config = toRef(props, "config");
+    watch(
+      () => props.activeRow,
+      (index) => {
+        if (index > -1) {
+          nextTick(() => {
+            if (grid.value) {
+              const el = Array.from(grid.value.querySelectorAll("tr"))[
+                index + 1
+              ]; //+1 for header
+              toView(el, grid.value);
+            }
+          });
+        }
       }
-    },
-  },
-  computed: {
-    cls() {
-      return this.config.map((item, index) => {
+    );
+    const cls = computed(() => {
+      return config.value.map((item, index) => {
         if (item.align && item.align.toLowerCase() === "right") {
           return `tr${index + 1}`;
         }
@@ -109,34 +128,58 @@ export default {
         }
         return `tl${index + 1}`;
       });
-    },
-  },
-  methods: {
-    isSelected(item) {
-      if (this.value && this.value.length) {
-        return this.value.some((x) => x[this.textProp] === item[this.textProp]);
+    });
+
+    const isSelected = (item: IAutocompleteItem) => {
+      const value = props.value as IAutocompleteItem[];
+      if (value && value.length) {
+        return value.some(
+          (x) =>
+            (x[props.textProp] as string) === (item[props.textProp] as string)
+        );
       }
-      return this.value[this.textProp] === item[this.textProp];
-    },
-    isActive(index) {
-      return this.activeRow === index;
-    },
-    isActiveCell(row, col) {
-      return this.activeRow === row && this.activeCol === col;
-    },
-    getId(index, col) {
-      return index === this.activeRow && this.activeCol === col
-        ? this.activeId
-        : null;
-    },
-    select(item) {
-      this.$emit("select", item);
-    },
+      return (
+        ((props.value as IAutocompleteItem)[props.textProp] as string) ===
+        (item[props.textProp] as string)
+      );
+    };
+    const isActive = (index: number) => {
+      return props.activeRow === index;
+    };
+    const isActiveCell = (row: number, col: number) => {
+      return props.activeRow === row && props.activeCol === col;
+    };
+    const getId = (index: number, col: number) => {
+      return index === props.activeRow && props.activeCol === col
+        ? props.activeId
+        : undefined;
+    };
+    const select = (item: IAutocompleteItem) => {
+      context.emit("select", item);
+    };
+
+    const getText = (
+      item: IAutocompleteItem,
+      prop: keyof IAutocompleteItem
+    ) => {
+      return item[prop] as string;
+    };
+
+    return {
+      cls,
+      isSelected,
+      isActive,
+      isActiveCell,
+      getId,
+      select,
+      getText,
+      grid,
+    };
   },
   components: {
     Highlighter,
   },
-};
+});
 </script>
 <style lang="scss" scoped>
 @import "@featherds/styles/mixins/typography";

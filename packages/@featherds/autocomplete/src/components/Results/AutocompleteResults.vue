@@ -19,16 +19,16 @@
         :aria-selected="isSelected(item)"
         :highlighted="isActive(index)"
         :selected="isSelected(item)"
-        @click.stop="select(item)"
+        @mousedown.stop.prevent="select(item)"
       >
         <Highlighter
           :highlight="highlight"
           :query="query"
-          :text="item[textProp]"
+          :text="item[textProp] as string"
         />
-        <span class="autocomplete-item-new-label" v-if="item._new">{{
-          newLabel
-        }}</span>
+        <span class="autocomplete-item-new-label" v-if="item._new">
+          {{ newLabel }}
+        </span>
       </FeatherListItem>
       <li
         v-if="items.length !== 1 && item._new"
@@ -39,16 +39,29 @@
     </template>
   </FeatherList>
 </template>
-<script>
+<script lang="ts">
+import {
+  defineComponent,
+  nextTick,
+  PropType,
+  Ref,
+  toRef,
+  watch,
+  ref,
+  ComponentPublicInstance,
+} from "vue";
 import { toView } from "@featherds/utils/scroll";
 import { FeatherListItem, FeatherList } from "@featherds/list";
-import Highlighter from "../Highlight/Highlighter";
-import HighlightMixin from "../Highlight/HighlightMixin";
-import HighlighterMixin from "../Highlight/HighlighterMixin";
-export default {
-  mixins: [HighlightMixin, HighlighterMixin],
+import Highlighter from "../Highlight/Highlighter.vue";
+import HighlightProps from "../Highlight/HighlightProps";
+import HighlighterProps from "../Highlight/HighlighterProps";
+import { IAutocompleteItem } from "../types";
+
+export default defineComponent({
   emits: ["select"],
   props: {
+    ...HighlighterProps,
+    ...HighlightProps,
     activeId: {
       type: String,
       required: true,
@@ -58,15 +71,17 @@ export default {
       required: true,
     },
     items: {
-      type: Array,
+      type: Array as PropType<IAutocompleteItem[]>,
       required: true,
     },
     value: {
-      type: [Array, Object],
+      type: [Array, Object] as PropType<
+        IAutocompleteItem[] | IAutocompleteItem
+      >,
       default: () => [],
     },
     textProp: {
-      type: String,
+      type: String as unknown as PropType<keyof IAutocompleteItem>,
       default: "_text",
     },
     single: {
@@ -78,41 +93,58 @@ export default {
       default: "new",
     },
   },
-  watch: {
-    activeIndex(index) {
-      if (index > -1) {
-        this.$nextTick(() => {
-          const el = Array.prototype.slice.call(
-            this.$el.querySelectorAll("li")
-          )[index];
-          toView(el, this.$refs.list.$el);
-        });
+  setup(props, context) {
+    const activeIndex = toRef(props, "activeIndex");
+    const activeId = toRef(props, "activeId");
+    const list: Ref<ComponentPublicInstance | undefined> = ref();
+    watch(
+      () => props.activeIndex,
+      (index) => {
+        if (index > -1) {
+          nextTick(() => {
+            if (list.value) {
+              const el = Array.from(
+                (list.value.$el as HTMLElement).querySelectorAll("li")
+              )[index];
+              toView(el, list.value.$el as HTMLElement);
+            }
+          });
+        }
       }
-    },
-  },
-  methods: {
-    isSelected(item) {
-      if (this.value && this.value.length) {
-        return this.value.some((x) => x[this.textProp] === item[this.textProp]);
+    );
+
+    const isSelected = (item: IAutocompleteItem) => {
+      const value = props.value as IAutocompleteItem[];
+      if (value && value.length) {
+        return value.some(
+          (x) =>
+            (x[props.textProp] as string) === (item[props.textProp] as string)
+        );
       }
-      return this.value[this.textProp] === item[this.textProp];
-    },
-    isActive(index) {
-      return this.activeIndex === index;
-    },
-    getId(index) {
-      return index === this.activeIndex ? this.activeId : null;
-    },
-    select(item) {
-      this.$emit("select", item);
-    },
+      return (
+        ((props.value as IAutocompleteItem)[props.textProp] as string) ===
+        (item[props.textProp] as string)
+      );
+    };
+
+    const isActive = (index: number) => {
+      return activeIndex.value === index;
+    };
+    const getId = (index: number) => {
+      return index === activeIndex.value ? activeId.value : undefined;
+    };
+    const select = (item: unknown) => {
+      context.emit("select", item);
+    };
+    return { list, isSelected, isActive, getId, select };
   },
+
   components: {
     FeatherList,
     FeatherListItem,
     Highlighter,
   },
-};
+});
 </script>
 <style lang="scss" scoped>
 @import "@featherds/styles/mixins/typography";
