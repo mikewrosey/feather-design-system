@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
 import { defineComponent, h } from "vue";
-
-export default defineComponent({
-  props: {
-    center: {
-      type: Boolean,
-      default: false,
-    },
+export const props = {
+  center: {
+    type: Boolean,
+    default: false,
   },
+};
+export default defineComponent({
+  props,
   data() {
     return {
       pressed: false,
@@ -22,7 +22,7 @@ export default defineComponent({
     },
   },
   methods: {
-    onClick($event) {
+    onClick($event: MouseEvent) {
       //reset on every click
       this.pressed = false;
       this.active = false;
@@ -42,10 +42,12 @@ export default defineComponent({
           const left = $event.pageX;
 
           position = {
-            top: `${top - rect.top - size / 2 - document.documentElement.scrollTop
-              }px`,
-            left: `${left - rect.left - size / 2 - document.documentElement.scrollLeft
-              }px`,
+            top: `${
+              top - rect.top - size / 2 - document.documentElement.scrollTop
+            }px`,
+            left: `${
+              left - rect.left - size / 2 - document.documentElement.scrollLeft
+            }px`,
           };
         }
         this.styles = {

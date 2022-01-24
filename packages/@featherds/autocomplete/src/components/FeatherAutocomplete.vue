@@ -163,7 +163,7 @@ import {
   onMounted,
 } from "vue";
 import { useResultList } from "./Results/ResultList";
-import { useResultGrid, IAutocompleteGridColumn } from "./Results/ResultGrid";
+import { useResultGrid } from "./Results/ResultGrid";
 import HighlightProps from "./Highlight/HighlightProps";
 import { useSingle, useMulti } from "./Type/";
 import { useIdsAndIcons } from "./IdsAndIcons";
@@ -172,7 +172,12 @@ import { useComboBoxAttrs } from "./ComboBoxAttrs";
 import { useChips } from "./Chips";
 import { useInputListeners } from "./InputListeners";
 import { useDom } from "./Dom";
-import { IAutocompleteItem, TYPES, IAutocompleteType } from "./types";
+import {
+  IAutocompleteItemType,
+  TYPES,
+  IAutocompleteType,
+  IAutocompleteGridColumn,
+} from "./types";
 
 const LABELS = {
   noResults: "No results found",
@@ -187,14 +192,16 @@ export const props = {
   ...InputWrapperProps,
   ...InputSubTextProps,
   modelValue: {
-    type: [Array, Object] as PropType<IAutocompleteItem[] | IAutocompleteItem>,
+    type: [Array, Object] as PropType<
+      Array<IAutocompleteItemType> | IAutocompleteItemType
+    >,
   },
   results: {
-    type: Array as PropType<IAutocompleteItem[]>,
-    default: () => [],
+    type: Array as PropType<Array<IAutocompleteItemType>>,
+    default: () => [] as IAutocompleteItemType[],
   },
   textProp: {
-    type: String as unknown as PropType<keyof IAutocompleteItem>,
+    type: String,
     default: "_text",
   },
   loading: {
@@ -215,7 +222,7 @@ export const props = {
   newMatcher: {
     type: Function,
     default: (
-      item: IAutocompleteItem,
+      item: IAutocompleteItemType,
       query: string,
       comp: { textProp: string }
     ) => {
@@ -256,7 +263,6 @@ export default defineComponent({
       toRef(props, "labels"),
       LABELS
     );
-    // const inherittedAttrs = useInheritAttrs(context.attrs);
     const idsAndIcons = useIdsAndIcons();
     const state = useState(props);
 
@@ -337,15 +343,15 @@ export default defineComponent({
       if (strategy.single) {
         return [];
       }
-      return state.modelValue.value as IAutocompleteItem[];
+      return state.modelValue.value as IAutocompleteItemType[];
     });
 
     const selectedDescribedByText = computed(() => {
       if (
         state.modelValue.value &&
-        (state.modelValue.value as IAutocompleteItem[]).length
+        (state.modelValue.value as IAutocompleteItemType[]).length
       ) {
-        return (state.modelValue.value as IAutocompleteItem[])
+        return (state.modelValue.value as IAutocompleteItemType[])
           .map((x) => x[state.textProp.value])
           .join(", ");
       }
@@ -414,7 +420,7 @@ export default defineComponent({
       }
     };
 
-    const clickedItem = (item: IAutocompleteItem) => {
+    const clickedItem = (item: IAutocompleteItemType) => {
       strategy.selectItem(item);
       //clear everything and re focus
       state.internalResults.value = [];

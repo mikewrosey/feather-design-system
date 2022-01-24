@@ -1,13 +1,13 @@
 import { computed, watch, SetupContext, Ref } from "vue";
 import { useState } from "../State";
-import { IAutocompleteItem, IAutocompleteType } from "../types";
+import { IAutocompleteItemType, IAutocompleteType } from "../types";
 
 const useSingle = (
   state: ReturnType<typeof useState>,
   context: SetupContext<("new" | "update:modelValue" | "search")[]>,
   results: { active: { row: number } }
 ): IAutocompleteType => {
-  const modelValue = state.modelValue as Ref<IAutocompleteItem>;
+  const modelValue = state.modelValue as Ref<IAutocompleteItemType>;
 
   const initialText = computed(() =>
     modelValue.value ? (modelValue.value[state.textProp.value] as string) : ""
@@ -27,7 +27,7 @@ const useSingle = (
     single: true,
     initialText,
     hasValue,
-    selectItem(item: IAutocompleteItem) {
+    selectItem(item: IAutocompleteItemType) {
       results.active.row = -1;
       state.forceCloseResults.value = true;
       if (item && item._new && state.allowNew.value) {

@@ -1,4 +1,5 @@
-import { IAutocompleteGridColumn, useResultGrid } from "./ResultGrid";
+import { useResultGrid } from "./ResultGrid";
+import { IAutocompleteGridColumn } from "../types";
 import { KEYCODES } from "@featherds/utils/keys";
 import { nextTick } from "vue";
 import { mount } from "@vue/test-utils";

@@ -1,18 +1,18 @@
 import { computed, watch, SetupContext, Ref } from "vue";
 import { useState } from "../State";
-import { IAutocompleteItem, IAutocompleteType } from "../types";
+import { IAutocompleteItemType, IAutocompleteType } from "../types";
 
 const useMulti = (
   state: ReturnType<typeof useState>,
   context: SetupContext<("new" | "update:modelValue" | "search")[]>
 ): IAutocompleteType => {
-  const modelValue = state.modelValue as Ref<IAutocompleteItem[]>;
+  const modelValue = state.modelValue as Ref<IAutocompleteItemType[]>;
   const initialText = computed(() => "");
   const hasValue = computed(() => {
     return !!(modelValue.value && modelValue.value.length > 0);
   });
 
-  const setSelectionLimit = (results: IAutocompleteItem[]) => {
+  const setSelectionLimit = (results: IAutocompleteItemType[]) => {
     if (
       state.selectionLimit.value &&
       results.length >= state.selectionLimit.value
@@ -26,7 +26,7 @@ const useMulti = (
   watch(
     state.modelValue,
     (v) => {
-      const arr = v as IAutocompleteItem[];
+      const arr = v as IAutocompleteItemType[];
       if (arr && arr.length) {
         setSelectionLimit(arr);
       }
@@ -37,7 +37,7 @@ const useMulti = (
     single: false,
     initialText,
     hasValue,
-    selectItem(item: IAutocompleteItem) {
+    selectItem(item: IAutocompleteItemType) {
       const value = modelValue.value;
       if (
         value &&
@@ -51,7 +51,7 @@ const useMulti = (
       context.emit("update:modelValue", result);
       setSelectionLimit(result);
     },
-    removeItem(item: IAutocompleteItem) {
+    removeItem(item: IAutocompleteItemType) {
       const value = modelValue.value;
       const index = value.indexOf(item);
       if (index > -1) {

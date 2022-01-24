@@ -19,7 +19,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ExtractPropTypes } from "vue";
+import { defineComponent, ExtractPropTypes, inject } from "vue";
 
 export const props = {
   hint: {
@@ -58,6 +58,11 @@ export default defineComponent({
     },
   },
   props: { ...props, ...privateProps },
+  setup() {
+    const options = inject("subTextOptions", {});
+
+    return options;
+  },
 });
 </script>
 <style lang="scss" scoped>

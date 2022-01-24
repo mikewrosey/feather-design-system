@@ -9,7 +9,7 @@ import {
 import { toView } from "@featherds/utils/scroll";
 import { useChips } from "./Chips";
 import { useState } from "./State";
-import { IAutocompleteItem } from "./types";
+import { IAutocompleteItemType } from "./types";
 
 const useDom = (
   state: ReturnType<typeof useState>,
@@ -86,8 +86,8 @@ const useDom = (
         adjustTextArea();
       }
       //when a value is added make sure to scroll input into view
-      const vArr = v as IAutocompleteItem[];
-      const oArr = o as IAutocompleteItem[];
+      const vArr = v as IAutocompleteItemType[];
+      const oArr = o as IAutocompleteItemType[];
       if (vArr && oArr && vArr.length > oArr.length) {
         nextTick(() => {
           if (scrollContainer.value && input.value) {

@@ -1,12 +1,12 @@
 import { ref, toRef, computed } from "vue";
 
-import { IAutocompleteItem } from "./types";
+import { IAutocompleteItemType } from "./types";
 interface IProps {
   loading: boolean;
   minChar: number;
-  modelValue: IAutocompleteItem[] | IAutocompleteItem | undefined;
+  modelValue: IAutocompleteItemType[] | IAutocompleteItemType | undefined;
   disabled: boolean;
-  textProp: keyof IAutocompleteItem;
+  textProp: keyof IAutocompleteItemType;
   allowNew: boolean;
   error: string | undefined;
   label: string | undefined;
@@ -26,7 +26,7 @@ const useState = (props: IProps) => {
   const query = ref("");
   const hasFocus = ref(false);
 
-  const internalResults = ref([] as IAutocompleteItem[]);
+  const internalResults = ref([] as IAutocompleteItemType[]);
   const forceCloseResults = ref(false);
   const selectionLimitReached = ref(false);
 

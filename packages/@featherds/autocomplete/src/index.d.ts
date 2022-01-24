@@ -1,4 +1,14 @@
 declare module "@featherds/autocomplete" {
-  const FeatherAutocomplete: typeof import("./components/FeatherAutocomplete.vue").default;
+  import { DefineComponent } from "vue";
+  const FeatherAutocomplete: DefineComponent<
+    typeof import("./components/FeatherAutocomplete.vue").props
+  >;
+  export {
+    TYPES,
+    IAutocompleteItem,
+    IAutocompleteItemType,
+    IAutocompleteGridColumn,
+    IAutocompleteType,
+  } from "./components/types";
   export { FeatherAutocomplete };
 }

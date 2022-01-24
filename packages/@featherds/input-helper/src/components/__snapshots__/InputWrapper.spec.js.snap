@@ -215,7 +215,6 @@ exports[`InputWrapper.vue should render clear and error icons 1`] = `
         <svg
           aria-hidden="true"
           class="feather-icon"
-          data-v-0aa06a12=""
           focusable="false"
           role="img"
           viewBox="0 0 24 24"
@@ -229,7 +228,6 @@ exports[`InputWrapper.vue should render clear and error icons 1`] = `
       <svg
         aria-hidden="true"
         class="error-icon hide-when-disabled feather-icon error-icon hide-when-disabled"
-        data-v-0aa06a12=""
         focusable="false"
         role="img"
         viewBox="0 0 24 24"
@@ -303,7 +301,6 @@ exports[`InputWrapper.vue should render clear icon when clear and show clear is 
         <svg
           aria-hidden="true"
           class="feather-icon"
-          data-v-0aa06a12=""
           focusable="false"
           role="img"
           viewBox="0 0 24 24"
@@ -360,7 +357,6 @@ exports[`InputWrapper.vue should render in an error state 1`] = `
       <svg
         aria-hidden="true"
         class="error-icon hide-when-disabled feather-icon error-icon hide-when-disabled"
-        data-v-0aa06a12=""
         focusable="false"
         role="img"
         viewBox="0 0 24 24"

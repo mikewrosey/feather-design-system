@@ -6,29 +6,23 @@ exports[`FeatherSelect.vue should not raise the label when its empty 1`] = `
 >
   <div
     class="feather-menu feather-select-menu-container"
-    data-v-6a69cac4=""
   >
     
     <div
       class="feather-input-wrapper-container feather-select-wrapper"
-      data-v-051667c2=""
       menu-trigger=""
     >
       <fieldset
         aria-hidden="true"
         class="feather-input-border"
-        data-v-051667c2=""
       >
-        <legend
-          data-v-051667c2=""
-        >
+        <legend>
           Users
         </legend>
       </fieldset>
       <label
         class="feather-input-label"
         data-ref-id="feather-form-element-label"
-        data-v-051667c2=""
         for="feather-select-input"
         style="left: 16px;"
       >
@@ -36,11 +30,9 @@ exports[`FeatherSelect.vue should not raise the label when its empty 1`] = `
       </label>
       <div
         class="feather-input-wrapper"
-        data-v-051667c2=""
       >
         <div
           class="prefix"
-          data-v-051667c2=""
         >
           
           
@@ -59,7 +51,6 @@ exports[`FeatherSelect.vue should not raise the label when its empty 1`] = `
         
         <div
           class="post"
-          data-v-051667c2=""
         >
           <!---->
           <!---->
@@ -67,7 +58,6 @@ exports[`FeatherSelect.vue should not raise the label when its empty 1`] = `
           <svg
             aria-hidden="true"
             class="feather-select-icon feather-icon feather-select-icon"
-            data-v-0aa06a12=""
             focusable="false"
             role="img"
             viewBox="0 0 24 24"
@@ -84,7 +74,6 @@ exports[`FeatherSelect.vue should not raise the label when its empty 1`] = `
     
     <div
       class="feather-menu-dropdown bottom-left"
-      data-v-6a69cac4=""
       id="feather-menu-dropdown"
       style="display: none;"
     >
@@ -94,7 +83,6 @@ exports[`FeatherSelect.vue should not raise the label when its empty 1`] = `
         aria-label="Users"
         class="feather-list feather-select-options-list"
         data-ref-id="feather-select-list"
-        data-v-4ef0e6d6=""
         role="listbox"
         tabindex="-1"
       >
@@ -106,7 +94,7 @@ exports[`FeatherSelect.vue should not raise the label when its empty 1`] = `
   </div>
   <div
     class="feather-input-sub-text"
-    data-v-cef1410a=""
+    data-v-eaa4b636=""
     id="feather-select-description"
     style="display: none;"
   >
@@ -124,29 +112,23 @@ exports[`FeatherSelect.vue should raise the label when it has a value 1`] = `
 >
   <div
     class="feather-menu feather-select-menu-container"
-    data-v-6a69cac4=""
   >
     
     <div
       class="feather-input-wrapper-container raised feather-select-wrapper"
-      data-v-051667c2=""
       menu-trigger=""
     >
       <fieldset
         aria-hidden="true"
         class="feather-input-border"
-        data-v-051667c2=""
       >
-        <legend
-          data-v-051667c2=""
-        >
+        <legend>
           Users
         </legend>
       </fieldset>
       <label
         class="feather-input-label"
         data-ref-id="feather-form-element-label"
-        data-v-051667c2=""
         for="feather-select-input"
         style="left: 12px;"
       >
@@ -154,11 +136,9 @@ exports[`FeatherSelect.vue should raise the label when it has a value 1`] = `
       </label>
       <div
         class="feather-input-wrapper"
-        data-v-051667c2=""
       >
         <div
           class="prefix"
-          data-v-051667c2=""
         >
           
           
@@ -177,7 +157,6 @@ exports[`FeatherSelect.vue should raise the label when it has a value 1`] = `
         
         <div
           class="post"
-          data-v-051667c2=""
         >
           <!---->
           <!---->
@@ -185,7 +164,6 @@ exports[`FeatherSelect.vue should raise the label when it has a value 1`] = `
           <svg
             aria-hidden="true"
             class="feather-select-icon feather-icon feather-select-icon"
-            data-v-0aa06a12=""
             focusable="false"
             role="img"
             viewBox="0 0 24 24"
@@ -202,7 +180,6 @@ exports[`FeatherSelect.vue should raise the label when it has a value 1`] = `
     
     <div
       class="feather-menu-dropdown bottom-left"
-      data-v-6a69cac4=""
       id="feather-menu-dropdown"
       style="display: none;"
     >
@@ -212,7 +189,6 @@ exports[`FeatherSelect.vue should raise the label when it has a value 1`] = `
         aria-label="Users"
         class="feather-list feather-select-options-list"
         data-ref-id="feather-select-list"
-        data-v-4ef0e6d6=""
         role="listbox"
         tabindex="-1"
       >
@@ -224,7 +200,7 @@ exports[`FeatherSelect.vue should raise the label when it has a value 1`] = `
   </div>
   <div
     class="feather-input-sub-text"
-    data-v-cef1410a=""
+    data-v-eaa4b636=""
     id="feather-select-description"
     style="display: none;"
   >
@@ -242,29 +218,23 @@ exports[`FeatherSelect.vue should render in disabled state 1`] = `
 >
   <div
     class="feather-menu feather-select-menu-container"
-    data-v-6a69cac4=""
   >
     
     <div
       class="feather-input-wrapper-container disabled feather-select-wrapper"
-      data-v-051667c2=""
       menu-trigger=""
     >
       <fieldset
         aria-hidden="true"
         class="feather-input-border"
-        data-v-051667c2=""
       >
-        <legend
-          data-v-051667c2=""
-        >
+        <legend>
           Users
         </legend>
       </fieldset>
       <label
         class="feather-input-label"
         data-ref-id="feather-form-element-label"
-        data-v-051667c2=""
         for="feather-select-input"
         style="left: 16px;"
       >
@@ -272,11 +242,9 @@ exports[`FeatherSelect.vue should render in disabled state 1`] = `
       </label>
       <div
         class="feather-input-wrapper"
-        data-v-051667c2=""
       >
         <div
           class="prefix"
-          data-v-051667c2=""
         >
           
           
@@ -296,7 +264,6 @@ exports[`FeatherSelect.vue should render in disabled state 1`] = `
         
         <div
           class="post"
-          data-v-051667c2=""
         >
           <!---->
           <!---->
@@ -304,7 +271,6 @@ exports[`FeatherSelect.vue should render in disabled state 1`] = `
           <svg
             aria-hidden="true"
             class="feather-select-icon feather-icon feather-select-icon"
-            data-v-0aa06a12=""
             focusable="false"
             role="img"
             viewBox="0 0 24 24"
@@ -321,7 +287,6 @@ exports[`FeatherSelect.vue should render in disabled state 1`] = `
     
     <div
       class="feather-menu-dropdown bottom-left"
-      data-v-6a69cac4=""
       id="feather-menu-dropdown"
       style="display: none;"
     >
@@ -331,7 +296,6 @@ exports[`FeatherSelect.vue should render in disabled state 1`] = `
         aria-label="Users"
         class="feather-list feather-select-options-list"
         data-ref-id="feather-select-list"
-        data-v-4ef0e6d6=""
         role="listbox"
         tabindex="-1"
       >
@@ -343,7 +307,7 @@ exports[`FeatherSelect.vue should render in disabled state 1`] = `
   </div>
   <div
     class="feather-input-sub-text"
-    data-v-cef1410a=""
+    data-v-eaa4b636=""
     id="feather-select-description"
     style="display: none;"
   >
@@ -361,29 +325,23 @@ exports[`FeatherSelect.vue should render in error state 1`] = `
 >
   <div
     class="feather-menu feather-select-menu-container"
-    data-v-6a69cac4=""
   >
     
     <div
       class="feather-input-wrapper-container error feather-select-wrapper"
-      data-v-051667c2=""
       menu-trigger=""
     >
       <fieldset
         aria-hidden="true"
         class="feather-input-border"
-        data-v-051667c2=""
       >
-        <legend
-          data-v-051667c2=""
-        >
+        <legend>
           Users
         </legend>
       </fieldset>
       <label
         class="feather-input-label"
         data-ref-id="feather-form-element-label"
-        data-v-051667c2=""
         for="feather-select-input"
         style="left: 16px;"
       >
@@ -391,11 +349,9 @@ exports[`FeatherSelect.vue should render in error state 1`] = `
       </label>
       <div
         class="feather-input-wrapper"
-        data-v-051667c2=""
       >
         <div
           class="prefix"
-          data-v-051667c2=""
         >
           
           
@@ -414,15 +370,11 @@ exports[`FeatherSelect.vue should render in error state 1`] = `
         
         <div
           class="post"
-          data-v-051667c2=""
         >
           <!---->
           <svg
             aria-hidden="true"
             class="error-icon hide-when-disabled feather-icon error-icon hide-when-disabled"
-            data-v-051667c2=""
-            data-v-0aa06a12=""
-            data-v-41337cd6=""
             focusable="false"
             role="img"
             viewBox="0 0 24 24"
@@ -450,7 +402,6 @@ exports[`FeatherSelect.vue should render in error state 1`] = `
           <svg
             aria-hidden="true"
             class="feather-select-icon feather-icon feather-select-icon"
-            data-v-0aa06a12=""
             focusable="false"
             role="img"
             viewBox="0 0 24 24"
@@ -467,7 +418,6 @@ exports[`FeatherSelect.vue should render in error state 1`] = `
     
     <div
       class="feather-menu-dropdown bottom-left"
-      data-v-6a69cac4=""
       id="feather-menu-dropdown"
       style="display: none;"
     >
@@ -477,7 +427,6 @@ exports[`FeatherSelect.vue should render in error state 1`] = `
         aria-label="Users"
         class="feather-list feather-select-options-list"
         data-ref-id="feather-select-list"
-        data-v-4ef0e6d6=""
         role="listbox"
         tabindex="-1"
       >
@@ -489,7 +438,7 @@ exports[`FeatherSelect.vue should render in error state 1`] = `
   </div>
   <div
     class="feather-input-sub-text"
-    data-v-cef1410a=""
+    data-v-eaa4b636=""
     id="feather-select-description"
   >
     <!---->
@@ -497,7 +446,7 @@ exports[`FeatherSelect.vue should render in error state 1`] = `
       aria-live="assertive"
       class="feather-input-error"
       data-ref-id="feather-form-element-error"
-      data-v-cef1410a=""
+      data-v-eaa4b636=""
     >
       ERROR
     </div>

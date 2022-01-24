@@ -35,11 +35,10 @@
 <script lang="ts">
 import ClearIcon from "./ClearIcon.vue";
 import ErrorIcon from "./ErrorIcon.vue";
-import { defineComponent, ExtractPropTypes } from "vue";
+import { defineComponent, ExtractPropTypes, inject } from "vue";
 export const props = {
   label: {
     type: String,
-    required: true,
   },
   error: {
     type: String,
@@ -107,6 +106,10 @@ export default defineComponent({
       prefixWidth: 0,
       prefixObserver: null as unknown as MutationObserver,
     };
+  },
+  setup() {
+    const options = inject("wrapperOptions", {});
+    return options;
   },
 
   computed: {

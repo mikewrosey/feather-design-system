@@ -1,8 +1,7 @@
-
-
 module.exports = {
-  testEnvironment: 'jsdom',
-  moduleFileExtensions: ["js", "jsx", "json", "vue","ts","tsx"],
+  testEnvironment: "jsdom",
+  snapshotSerializers: ["./jest/serializer"],
+  moduleFileExtensions: ["js", "jsx", "json", "vue", "ts", "tsx"],
 
   transform: {
     "^.+\\.vue$": "@vue/vue3-jest",
@@ -17,12 +16,10 @@ module.exports = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     "^.+.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$":
-      "jest-transform-stub"
+      "jest-transform-stub",
   },
 
-  testPathIgnorePatterns: [
-    "<rootDir>/(?:.+?)/e2e/"
-  ],
+  testPathIgnorePatterns: ["<rootDir>/(?:.+?)/e2e/"],
 
   testMatch: ["**/@featherds/*/src/**/*.spec.(js|jsx|ts|tsx)"],
 
@@ -30,14 +27,6 @@ module.exports = {
 
   watchPlugins: [
     "jest-watch-typeahead/filename",
-    "jest-watch-typeahead/testname"
+    "jest-watch-typeahead/testname",
   ],
-  collectCoverage: true,
-
-  collectCoverageFrom: [
-    "**/@featherds/*/src/**/*.{js,ts,vue}",
-    "!**/node_modules/**"
-  ],
-
-  coverageReporters: ["text"]
 };

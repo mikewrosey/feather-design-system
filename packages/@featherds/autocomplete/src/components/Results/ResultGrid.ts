@@ -1,11 +1,7 @@
 import { reactive, nextTick } from "vue";
 import { KEYCODES } from "@featherds/utils/keys";
-import { IAutocompleteItem } from "../types";
-export interface IAutocompleteGridColumn {
-  prop: keyof IAutocompleteItem;
-  title: string;
-  align?: "right" | "left" | "center";
-}
+import { IAutocompleteItemType, IAutocompleteGridColumn } from "../types";
+
 const useResultGrid = (config: IAutocompleteGridColumn[]) => {
   const active = reactive({
     row: -1,
@@ -18,7 +14,10 @@ const useResultGrid = (config: IAutocompleteGridColumn[]) => {
       active.row = row;
     });
   };
-  const handleKeyPress = (e: KeyboardEvent, internalResults: unknown[]) => {
+  const handleKeyPress = (
+    e: KeyboardEvent,
+    internalResults: IAutocompleteItemType[]
+  ) => {
     //menu navigation
     if (e.keyCode === KEYCODES.DOWN) {
       //down

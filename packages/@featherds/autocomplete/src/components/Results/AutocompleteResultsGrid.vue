@@ -57,8 +57,7 @@ import {
   toRef,
   computed,
 } from "vue";
-import { IAutocompleteGridColumn } from "./ResultGrid";
-import { IAutocompleteItem } from "../types";
+import { IAutocompleteItemType, IAutocompleteGridColumn } from "../types";
 
 export default defineComponent({
   emits: ["select"],
@@ -78,17 +77,17 @@ export default defineComponent({
       required: true,
     },
     items: {
-      type: Array as PropType<IAutocompleteItem[]>,
+      type: Array as PropType<IAutocompleteItemType[]>,
       required: true,
     },
     value: {
       type: [Array, Object] as PropType<
-        IAutocompleteItem[] | IAutocompleteItem
+        IAutocompleteItemType[] | IAutocompleteItemType
       >,
       default: () => [],
     },
     textProp: {
-      type: String as unknown as PropType<keyof IAutocompleteItem>,
+      type: String as unknown as PropType<keyof IAutocompleteItemType>,
       default: "_text",
     },
     single: {
@@ -130,8 +129,8 @@ export default defineComponent({
       });
     });
 
-    const isSelected = (item: IAutocompleteItem) => {
-      const value = props.value as IAutocompleteItem[];
+    const isSelected = (item: IAutocompleteItemType) => {
+      const value = props.value as IAutocompleteItemType[];
       if (value && value.length) {
         return value.some(
           (x) =>
@@ -139,7 +138,7 @@ export default defineComponent({
         );
       }
       return (
-        ((props.value as IAutocompleteItem)[props.textProp] as string) ===
+        ((props.value as IAutocompleteItemType)[props.textProp] as string) ===
         (item[props.textProp] as string)
       );
     };
@@ -154,13 +153,13 @@ export default defineComponent({
         ? props.activeId
         : undefined;
     };
-    const select = (item: IAutocompleteItem) => {
+    const select = (item: IAutocompleteItemType) => {
       context.emit("select", item);
     };
 
     const getText = (
-      item: IAutocompleteItem,
-      prop: keyof IAutocompleteItem
+      item: IAutocompleteItemType,
+      prop: keyof IAutocompleteItemType
     ) => {
       return item[prop] as string;
     };

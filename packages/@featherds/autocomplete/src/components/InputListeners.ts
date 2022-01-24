@@ -3,7 +3,7 @@ import { KEYCODES } from "@featherds/utils/keys";
 import { useState } from "./State";
 import { useDom } from "./Dom";
 import { useChips } from "./Chips";
-import { IAutocompleteItem, IAutocompleteType } from "./types";
+import { IAutocompleteItemType, IAutocompleteType } from "./types";
 
 const useInputListeners = (
   state: ReturnType<typeof useState>,
@@ -15,7 +15,7 @@ const useInputListeners = (
     active: { row: number };
     handleKeyPress: (
       e: KeyboardEvent,
-      internalResults: IAutocompleteItem[]
+      internalResults: IAutocompleteItemType[]
     ) => boolean;
   },
   chips?: ReturnType<typeof useChips>
@@ -25,7 +25,7 @@ const useInputListeners = (
   const resetChipIndex = () => {
     if (chips) chips.reset();
   };
-  const selectItem = (item: IAutocompleteItem) => {
+  const selectItem = (item: IAutocompleteItemType) => {
     strategy.selectItem(item);
     dom.adjustTextArea();
   };
@@ -105,7 +105,7 @@ const useInputListeners = (
 
     if (chips) {
       //cast model to array
-      const modelValue = state.modelValue as Ref<IAutocompleteItem[]>;
+      const modelValue = state.modelValue as Ref<IAutocompleteItemType[]>;
       //chip deletion via enter
       if (e.keyCode === KEYCODES.ENTER && chips.activeIndex.value > -1) {
         e.preventDefault();
