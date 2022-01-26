@@ -19,7 +19,10 @@
         </div>
       </div>
       <div class="app-content">
-        <div class="app-content-container" :class="{ 'full-width': contentLayout === 'full' }">
+        <div
+          class="app-content-container"
+          :class="{ 'full-width': contentLayout === 'full' }"
+        >
           <slot></slot>
         </div>
       </div>
@@ -34,7 +37,15 @@ import { FocusTrap } from "@featherds/dialog";
 import { useCloseOnEsc } from "@featherds/composables/modal/CloseOnEsc";
 import { useRestoreFocus } from "@featherds/composables/modal/RestoreFocus";
 import { useOutsideClick } from "@featherds/composables/events/OutsideClick";
-import { ref, provide, computed, watch, onMounted, defineComponent } from "vue";
+import {
+  ref,
+  provide,
+  computed,
+  watch,
+  onMounted,
+  defineComponent,
+  Ref,
+} from "vue";
 export default defineComponent({
   props: {
     contentLayout: {
@@ -72,7 +83,7 @@ export default defineComponent({
     watch(useCloseOnEsc(expanded), () => {
       _expand.value = false;
     });
-    const activate = useOutsideClick(railContent, () => {
+    const activate = useOutsideClick(railContent as Ref<HTMLElement>, () => {
       _expand.value = false;
     });
     watch(expanded, (v) => {

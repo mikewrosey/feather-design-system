@@ -1,11 +1,11 @@
 import { ComputedRef } from "vue";
 
-export interface IAutocompleteItem extends IAutocompleteItemType {
+interface IAutocompleteItem extends IAutocompleteItemType {
   _new?: string;
   _text: string;
   _pre?: unknown;
 }
-export interface IAutocompleteItemType {
+interface IAutocompleteItemType {
   [k: string]: unknown;
 }
 
@@ -14,7 +14,7 @@ export enum TYPES {
   single = "single",
 }
 
-export interface IAutocompleteGridColumn {
+interface IAutocompleteGridColumn {
   prop: keyof IAutocompleteItemType;
   title: string;
   align?: "right" | "left" | "center";
@@ -29,4 +29,9 @@ interface IAutocompleteType {
   clickedItem: () => void;
   handleInputBlur: () => void;
 }
-export type { IAutocompleteType };
+export type {
+  IAutocompleteType,
+  IAutocompleteGridColumn,
+  IAutocompleteItemType,
+  IAutocompleteItem,
+};

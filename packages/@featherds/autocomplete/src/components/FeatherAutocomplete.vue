@@ -43,12 +43,12 @@
             <Chip
               v-show="!strategy.single"
               v-for="(item, index) in modelValueList"
-              :key="item[textProp]"
+              :key="(item[textProp] as string)"
               role="button"
               :id="index === activeChipIndex ? activeChipId : null"
               :focused="index === activeChipIndex"
               :disabled="disabled"
-              :text="item[textProp]"
+              :text="(item[textProp] as string)"
               :remove-label="removeLabel"
               :pre="item._pre"
               @delete="strategy.removeItem(item)"
@@ -428,6 +428,7 @@ export default defineComponent({
         dom.input.value.focus();
       }
       strategy.clickedItem();
+      dom.adjustTextArea();
       if (!strategy.single) {
         emitSearch();
       }
