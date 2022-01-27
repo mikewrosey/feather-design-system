@@ -21,6 +21,12 @@ import {
   IAutocompleteItemType,
   IAutocompleteGridColumn,
 } from "@featherds/autocomplete";
+interface IPeople extends IAutocompleteItemType {
+  name: string;
+  email: string;
+  car: string;
+  order: number;
+}
 const people = [
   {
     name: "Clarke",
@@ -142,14 +148,14 @@ const people = [
     car: "Audi",
     order: 62,
   },
-] as IAutocompleteItemType[];
+] as IPeople[];
 export default defineComponent({
   data() {
     return {
       timeout: -1,
       loading: false,
-      results: [],
-      value: [],
+      results: [] as IPeople[],
+      value: [] as IPeople[],
       config: [
         {
           title: "Name",
@@ -172,7 +178,7 @@ export default defineComponent({
     };
   },
   methods: {
-    search(q) {
+    search(q: string) {
       this.loading = true;
       clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {

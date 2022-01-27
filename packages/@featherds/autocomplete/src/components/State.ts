@@ -1,18 +1,8 @@
-import { ref, toRef, computed } from "vue";
+import { ref, toRef, computed, ExtractPropTypes } from "vue";
 
-import { IAutocompleteItemType } from "./types";
-interface IProps {
-  loading: boolean;
-  minChar: number;
-  modelValue: IAutocompleteItemType[] | IAutocompleteItemType | undefined;
-  disabled: boolean;
-  textProp: keyof IAutocompleteItemType;
-  allowNew: boolean;
-  error: string | undefined;
-  label: string | undefined;
-  selectionLimit: number | undefined;
-}
-const useState = (props: IProps) => {
+import { IAutocompleteItemType, props as p } from "./types";
+
+const useState = (props: ExtractPropTypes<typeof p>) => {
   const loading = toRef(props, "loading");
   const minChar = toRef(props, "minChar");
   const modelValue = toRef(props, "modelValue");

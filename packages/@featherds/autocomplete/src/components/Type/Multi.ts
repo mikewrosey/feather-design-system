@@ -1,10 +1,10 @@
 import { computed, watch, SetupContext, Ref } from "vue";
 import { useState } from "../State";
-import { IAutocompleteItemType, IAutocompleteType } from "../types";
+import { IAutocompleteItemType, IAutocompleteType, emits } from "../types";
 
 const useMulti = (
   state: ReturnType<typeof useState>,
-  context: SetupContext<("new" | "update:modelValue" | "search")[]>
+  context: SetupContext<typeof emits>
 ): IAutocompleteType => {
   const modelValue = state.modelValue as Ref<IAutocompleteItemType[]>;
   const initialText = computed(() => "");

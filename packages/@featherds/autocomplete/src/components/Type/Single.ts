@@ -1,10 +1,10 @@
 import { computed, watch, SetupContext, Ref } from "vue";
 import { useState } from "../State";
-import { IAutocompleteItemType, IAutocompleteType } from "../types";
+import { emits, IAutocompleteItemType, IAutocompleteType } from "../types";
 
 const useSingle = (
   state: ReturnType<typeof useState>,
-  context: SetupContext<("new" | "update:modelValue" | "search")[]>,
+  context: SetupContext<typeof emits>,
   results: { active: { row: number } }
 ): IAutocompleteType => {
   const modelValue = state.modelValue as Ref<IAutocompleteItemType>;
@@ -31,7 +31,7 @@ const useSingle = (
       results.active.row = -1;
       state.forceCloseResults.value = true;
       if (item && item._new && state.allowNew.value) {
-        context.emit("new", item._new);
+        context.emit("new", item._new as string);
       } else {
         context.emit("update:modelValue", item);
       }
@@ -45,7 +45,7 @@ const useSingle = (
       if (results.active.row > -1) {
         const item = state.internalResults.value[results.active.row];
         if (item && item._new && state.allowNew.value) {
-          context.emit("new", item._new);
+          context.emit("new", item._new as string);
         } else {
           context.emit("update:modelValue", item);
         }

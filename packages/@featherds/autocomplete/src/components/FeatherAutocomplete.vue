@@ -139,10 +139,8 @@
 import {
   InputWrapper,
   useInputWrapper,
-  InputWrapperProps,
   InputSubText,
   useInputSubText,
-  InputSubTextProps,
   useInheritAttrs,
 } from "@featherds/input-helper";
 import { FeatherIcon } from "@featherds/icon";
@@ -154,17 +152,10 @@ import MenuMessage from "./MenuMessage.vue";
 import Chip from "./Chip.vue";
 import Spinner from "./Spinner.vue";
 import { useLabelProperty } from "@featherds/composables/LabelProperty";
-import {
-  defineComponent,
-  toRef,
-  PropType,
-  computed,
-  watch,
-  onMounted,
-} from "vue";
+import { defineComponent, toRef, computed, watch, onMounted } from "vue";
 import { useResultList } from "./Results/ResultList";
 import { useResultGrid } from "./Results/ResultGrid";
-import HighlightProps from "./Highlight/HighlightProps";
+
 import { useSingle, useMulti } from "./Type/";
 import { useIdsAndIcons } from "./IdsAndIcons";
 import { useState } from "./State";
@@ -173,89 +164,20 @@ import { useChips } from "./Chips";
 import { useInputListeners } from "./InputListeners";
 import { useDom } from "./Dom";
 import {
-  IAutocompleteItemType,
   TYPES,
+  emits,
+  props,
+  LABELS,
   IAutocompleteType,
-  IAutocompleteGridColumn,
+  IAutocompleteItemType,
 } from "./types";
-
-const LABELS = {
-  noResults: "No results found",
-  minChar: "Enter ${min} characters to search",
-  clear: "Clear value",
-  selectionLimit: "Selection limit reached",
-  new: "New",
-  remove: "Remove",
-};
-export const props = {
-  ...HighlightProps,
-  ...InputWrapperProps,
-  ...InputSubTextProps,
-  modelValue: {
-    type: [Array, Object] as PropType<
-      Array<IAutocompleteItemType> | IAutocompleteItemType
-    >,
-  },
-  results: {
-    type: Array as PropType<Array<IAutocompleteItemType>>,
-    default: () => [] as IAutocompleteItemType[],
-  },
-  textProp: {
-    type: String,
-    default: "_text",
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  minChar: {
-    type: Number,
-    default: 0,
-  },
-  allowNew: {
-    type: Boolean,
-    default: false,
-  },
-  selectionLimit: {
-    type: Number,
-  },
-  newMatcher: {
-    type: Function,
-    default: (
-      item: IAutocompleteItemType,
-      query: string,
-      comp: { textProp: string }
-    ) => {
-      return (
-        (item[comp.textProp] as string).toLowerCase() === query.toLowerCase()
-      );
-    },
-  },
-  type: {
-    type: String as PropType<keyof typeof TYPES>,
-    required: true,
-    validator: (v: TYPES) => {
-      // The value must match either
-      return [TYPES.multi, TYPES.single].indexOf(v) !== -1;
-    },
-  },
-  labels: {
-    type: Object as PropType<typeof LABELS>,
-    default: () => {
-      return LABELS;
-    },
-  },
-  gridConfig: {
-    type: Array as PropType<IAutocompleteGridColumn[]>,
-  },
-};
 
 export default defineComponent({
   model: {
     prop: "modelValue",
     event: "update:modelValue",
   },
-  emits: ["update:modelValue", "search", "new"],
+  emits,
   props,
   methods: {},
   setup(props, context) {
@@ -276,6 +198,7 @@ export default defineComponent({
     } else {
       results = useResultList();
     }
+    context.emit;
 
     let strategy: IAutocompleteType;
     if (props.type === TYPES.multi) {

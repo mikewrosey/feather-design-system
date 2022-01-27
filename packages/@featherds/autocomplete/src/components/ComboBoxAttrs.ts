@@ -2,12 +2,13 @@ import { computed, SetupContext } from "vue";
 import { useState } from "./State";
 import { useIdsAndIcons } from "./IdsAndIcons";
 import { useChips } from "./Chips";
+import { emits } from "./types";
 
 const useComboBoxAttrs = (
   state: ReturnType<typeof useState>,
   ids: ReturnType<typeof useIdsAndIcons>,
   active: { row: number },
-  context: SetupContext<("update:modelValue" | "search" | "new")[]>,
+  context: SetupContext<typeof emits>,
   grid: boolean,
   chips?: ReturnType<typeof useChips>
 ) => {
