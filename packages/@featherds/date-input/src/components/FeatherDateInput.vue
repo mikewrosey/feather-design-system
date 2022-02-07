@@ -4,6 +4,7 @@
     @focusin="handleFocus"
     @focusout="handleBlur"
     @keypress="handleKeyDown"
+    class="feather-date-input-container"
   >
     <FeatherMenu
       :open="showMenu"
@@ -415,7 +416,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "@featherds/styles/themes/variables";
-
 .feather-date-input-group {
   flex: 1;
   &.disabled {

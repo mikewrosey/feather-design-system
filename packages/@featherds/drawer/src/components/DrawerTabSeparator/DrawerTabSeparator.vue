@@ -8,7 +8,6 @@
 hr {
   position: relative;
   margin: 0.4375rem 0.1875rem;
-  border-top: none;
   border-color: var($border-on-color);
 }
 </style>

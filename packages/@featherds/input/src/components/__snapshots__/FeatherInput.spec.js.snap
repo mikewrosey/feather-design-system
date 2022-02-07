@@ -19,7 +19,6 @@ exports[`FeatherInput.vue should allow custom blur events 1`] = `
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 12px;"
     >
       label
     </label>
@@ -86,7 +85,6 @@ exports[`FeatherInput.vue should allow custom focus events 1`] = `
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 12px;"
     >
       label
     </label>
@@ -153,7 +151,6 @@ exports[`FeatherInput.vue should clear input when clear-icon is clicked 1`] = `
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 16px;"
     >
       label
     </label>
@@ -220,7 +217,6 @@ exports[`FeatherInput.vue should not render a clear icon when the input doesn't 
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 16px;"
     >
       label
     </label>
@@ -287,7 +283,6 @@ exports[`FeatherInput.vue should render a clear icon when clear has a value and 
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 12px;"
     >
       label
     </label>
@@ -372,7 +367,6 @@ exports[`FeatherInput.vue should render a maxlength attribute and character coun
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 12px;"
     >
       label
     </label>
@@ -445,7 +439,6 @@ exports[`FeatherInput.vue should render an input error input 1`] = `
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 16px;"
     >
       label
     </label>
@@ -544,7 +537,6 @@ exports[`FeatherInput.vue should render an input error input and has a value 1`]
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 12px;"
     >
       label
     </label>
@@ -643,7 +635,6 @@ exports[`FeatherInput.vue should render an input error input and has focus 1`] =
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 12px;"
     >
       label
     </label>
@@ -742,7 +733,6 @@ exports[`FeatherInput.vue should render an input with a label 1`] = `
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 16px;"
     >
       label
     </label>
@@ -809,7 +799,6 @@ exports[`FeatherInput.vue should render an input with a label and hint text 1`] 
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 16px;"
     >
       label
     </label>
@@ -881,7 +870,6 @@ exports[`FeatherInput.vue should render an input with a preset value 1`] = `
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 12px;"
     >
       label
     </label>
@@ -953,7 +941,6 @@ exports[`FeatherInput.vue should render an input with raised label when focused 
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 12px;"
     >
       label
     </label>
@@ -1020,7 +1007,6 @@ exports[`FeatherInput.vue should render an input with raised label when focused 
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 12px;"
     >
       label
     </label>

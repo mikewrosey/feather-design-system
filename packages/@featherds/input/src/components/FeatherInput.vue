@@ -1,5 +1,5 @@
 <template>
-  <div v-bind="inherittedAttrs">
+  <div v-bind="inherittedAttrs" class="feather-input-container">
     <InputWrapper
       :for="inputId"
       :raised="isRaised"
@@ -241,7 +241,6 @@ export default {
 <style lang="scss" scoped>
 @import "@featherds/styles/themes/variables";
 @import "@featherds/styles/mixins/typography";
-
 .feather-input-content {
   &.error {
     .feather-input {

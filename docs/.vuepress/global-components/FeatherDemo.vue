@@ -122,7 +122,9 @@ export default {
 @import "@featherds/styles/themes/variables";
 @import "@featherds/styles/mixins/typography";
 @import "@featherds/styles/mixins/responsive";
+@import "@featherds/input-helper/scss/spacing";
 .feather-demo {
+  //@include form-spacing();
   border: 1px solid var($shade-4);
   background-color: var($background);
   border-radius: 0.25rem;

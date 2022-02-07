@@ -13,7 +13,7 @@ menu: foundation
   }
   .img-container{
     display:flex;
-    margin-bottom:1rem;
+    margin-bottom:2rem;
     height:9rem;
   }
   .img-container.img-right{

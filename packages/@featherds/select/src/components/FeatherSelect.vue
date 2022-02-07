@@ -1,5 +1,5 @@
 <template>
-  <div v-bind="inherittedAttrs">
+  <div v-bind="inherittedAttrs" class="feather-select-container">
     <FeatherMenu
       no-expand
       :open="showMenu"

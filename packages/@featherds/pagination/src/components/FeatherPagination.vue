@@ -254,6 +254,9 @@ export default {
   margin-right: 2.375rem;
   margin-left: 0.5rem;
   display: flex;
+  &.feather-select-container {
+    padding: 0;
+  }
 }
 .range-text {
   margin-right: 3.125rem;

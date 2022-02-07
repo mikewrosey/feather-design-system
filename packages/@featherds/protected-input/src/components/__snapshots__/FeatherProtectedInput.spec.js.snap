@@ -19,7 +19,6 @@ exports[`FeatherProtectedInput.vue should change input type when show password i
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 16px;"
     >
       TEST
     </label>
@@ -114,7 +113,6 @@ exports[`FeatherProtectedInput.vue should render with show password icon by defa
       class="feather-input-label"
       data-ref-id="feather-form-element-label"
       for="feather-input-label"
-      style="left: 16px;"
     >
       TEST
     </label>

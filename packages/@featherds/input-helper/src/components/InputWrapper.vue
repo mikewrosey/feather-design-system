@@ -171,7 +171,7 @@ export default {
 }
 
 .feather-input-wrapper-container {
-  margin-top: 0.75rem;
+  //margin-top: 0.75rem;
   position: relative;
   width: 100%;
   &.background {
@@ -302,9 +302,7 @@ export default {
     label {
       @include screen-reader;
       left: -99999px !important;
-
     }
-
   }
   &.has-prefix {
     .feather-input-wrapper {

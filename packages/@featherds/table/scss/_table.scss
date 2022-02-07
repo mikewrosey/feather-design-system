@@ -134,11 +134,6 @@
   @include body-small();
   color: var($secondary-text-on-surface);
 
-  + .feather-pagination {
-    //use paginations bottom margin for spacing.
-    margin-top: var($spacing-l);
-  }
-
   caption {
     text-align: left;
     @include subtitle1();
