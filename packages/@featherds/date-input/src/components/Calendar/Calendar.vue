@@ -405,6 +405,9 @@ export default {
       };
     },
   },
+  beforeUnmount() {
+    console.trace("mounted");
+  },
   components: {
     FeatherButton,
     FeatherIcon,

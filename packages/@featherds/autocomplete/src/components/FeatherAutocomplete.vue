@@ -5,6 +5,7 @@
       :open="showMenu"
       @outside-click="handleOutsideClick"
       @trigger-click="handleTriggerClick"
+      @close="handleClose"
       class="feather-autocomplete-menu-container"
       :class="{ grid: gridConfig }"
       ref="menu"
@@ -663,6 +664,11 @@ export default {
       if (this.forceCloseResults || !this.showMenu) {
         this.handleOutsideClick();
       }
+    },
+    handleClose() {
+      this.forceCloseResults = true;
+      this.resetResultIndex();
+      this.activeChipIndex = -1;
     },
     handleOutsideClick() {
       this.hasFocus = false;

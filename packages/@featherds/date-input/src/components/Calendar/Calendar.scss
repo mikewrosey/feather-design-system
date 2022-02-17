@@ -8,7 +8,6 @@ $width: 30px;
 }
 .picker {
   box-sizing: border-box;
-  z-index: var($zindex-dropdown);
   display: flex;
   flex-direction: column;
 }
@@ -31,7 +30,7 @@ $width: 30px;
     margin-right: $spacing-s;
     &.year {
       margin-right: $spacing-m;
-      width: 85px;
+      width: 90px;
     }
   }
 }
