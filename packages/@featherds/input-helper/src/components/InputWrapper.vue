@@ -171,9 +171,9 @@ export default {
 }
 
 .feather-input-wrapper-container {
-  //margin-top: 0.75rem;
   position: relative;
   width: 100%;
+  margin-top: 5px;
   &.background {
     .feather-input-label {
       background-color: var($background);

@@ -1,63 +1,13 @@
 @import "@featherds/styles/themes/variables";
 
-$spacing: (
-  "xxs": prefix(spacing-xxs),
-  "xs": prefix(spacing-xs),
-  "s": prefix(spacing-s),
-  "m": prefix(spacing-m),
-  "l": prefix(spacing-l),
-  "xl": prefix(spacing-xl),
-  "xxl": prefix(spacing-xxl)
-);
-
-//utility classes
-$directions: (top, bottom, left, right);
-
-@each $size, $value in $spacing {
-  @each $direction in $directions {
-    .m#{str-slice($direction, 0, 1)}-#{$size} {
-      margin-#{$direction}: var($value);
-    }
-
-    .p#{str-slice($direction, 0, 1)}-#{$size} {
-      padding-#{$direction}: var($value);
-    }
-  }
-  //x
-  .mx-#{$size} {
-    margin-left: var($value);
-    margin-right: var($value);
-  }
-  .px-#{$size} {
-    padding-left: var($value);
-    padding-right: var($value);
-  }
-  //y
-  .my-#{$size} {
-    margin-top: var($value);
-    margin-bottom: var($value);
-  }
-  .py-#{$size} {
-    padding-top: var($value);
-    padding-bottom: var($value);
-  }
-  //blank
-  .m-#{$size} {
-    margin: var($value);
-  }
-  .p-#{$size} {
-    padding: var($value);
-  }
-}
-
 @mixin form-spacing() {
   :deep(.feather-autocomplete-container),
   :deep(.feather-date-input-container),
   :deep(.feather-input-container),
   :deep(.feather-select-container),
   :deep(.feather-textarea-container) {
-    padding-top: var(map-get($spacing, "s"));
-    padding-bottom: var(map-get($spacing, "s"));
+    padding-top: var($spacing-s);
+    padding-bottom: var($spacing-s);
   }
 }
 
@@ -65,20 +15,20 @@ $directions: (top, bottom, left, right);
   line-height: 0;
 
   :deep(.layout-container) {
-    margin-right: var(map-get($spacing, "xxl"));
+    margin-right: var($spacing-xxl);
     &:last-of-type {
       margin-right: 0;
     }
   }
   &.vertical :deep(.layout-container) {
     display: block;
-    margin-bottom: var(map-get($spacing, "m"));
+    margin-bottom: var($spacing-m);
     margin-right: 0;
   }
   label {
-    margin-bottom: var(map-get($spacing, "m"));
+    margin-bottom: var($spacing-m);
   }
   .feather-input-sub-text {
-    padding: var(map-get($spacing, "m")) 0 0 0;
+    padding: var($spacing-m) 0 0 0;
   }
 }

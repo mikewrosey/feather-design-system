@@ -162,7 +162,7 @@ export default {
     width: 100%;
     @include fill;
     & :deep(li > a) {
-      border-radius: 0.25rem;
+      border-radius: 4px;
     }
   }
   &.animate {

@@ -58,6 +58,7 @@ exports[`FeatherInput.vue should allow custom blur events 1`] = `
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <!---->
     
@@ -124,6 +125,7 @@ exports[`FeatherInput.vue should allow custom focus events 1`] = `
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <!---->
     
@@ -190,6 +192,7 @@ exports[`FeatherInput.vue should clear input when clear-icon is clicked 1`] = `
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <!---->
     
@@ -256,6 +259,7 @@ exports[`FeatherInput.vue should not render a clear icon when the input doesn't 
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <!---->
     
@@ -340,6 +344,7 @@ exports[`FeatherInput.vue should render a clear icon when clear has a value and 
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <!---->
     
@@ -406,6 +411,7 @@ exports[`FeatherInput.vue should render a maxlength attribute and character coun
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <!---->
     
@@ -504,6 +510,7 @@ exports[`FeatherInput.vue should render an input error input 1`] = `
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <div
       aria-live="assertive"
@@ -602,6 +609,7 @@ exports[`FeatherInput.vue should render an input error input and has a value 1`]
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <div
       aria-live="assertive"
@@ -700,6 +708,7 @@ exports[`FeatherInput.vue should render an input error input and has focus 1`] =
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <div
       aria-live="assertive"
@@ -772,6 +781,7 @@ exports[`FeatherInput.vue should render an input with a label 1`] = `
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <!---->
     
@@ -838,6 +848,7 @@ exports[`FeatherInput.vue should render an input with a label and hint text 1`] 
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <div
       class="feather-input-hint"
       data-ref-id="feather-form-element-hint"
@@ -909,6 +920,7 @@ exports[`FeatherInput.vue should render an input with a preset value 1`] = `
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <div
       class="feather-input-hint"
       data-ref-id="feather-form-element-hint"
@@ -980,6 +992,7 @@ exports[`FeatherInput.vue should render an input with raised label when focused 
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <!---->
     
@@ -1046,6 +1059,7 @@ exports[`FeatherInput.vue should render an input with raised label when focused 
     class="feather-input-sub-text"
     id="feather-input-description"
   >
+       
     <!---->
     <!---->
     

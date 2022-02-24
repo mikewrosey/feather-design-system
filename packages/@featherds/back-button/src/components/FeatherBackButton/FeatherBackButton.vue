@@ -116,7 +116,7 @@ export default {
 button {
   position: relative;
   background-color: transparent;
-  border-radius: 2.25rem;
+  border-radius: 36px;
   border: 1px solid var($primary);
   color: var($primary);
 
@@ -140,7 +140,7 @@ button {
   &:hover:after,
   &.hover:after,
   &:focus:before {
-    border-radius: 2.25rem;
+    border-radius: 36px;
   }
 }
 .hide {

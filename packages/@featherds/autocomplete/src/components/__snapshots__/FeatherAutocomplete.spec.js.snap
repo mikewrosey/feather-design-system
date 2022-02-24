@@ -185,8 +185,8 @@ exports[`FeatherAutocomplete base functionality multi disabled state should rend
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -340,8 +340,8 @@ exports[`FeatherAutocomplete base functionality multi disabled state should rend
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -493,8 +493,8 @@ exports[`FeatherAutocomplete base functionality multi should lower label when th
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -722,8 +722,8 @@ exports[`FeatherAutocomplete base functionality multi should not leave previous 
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -955,8 +955,8 @@ exports[`FeatherAutocomplete base functionality multi should raise the label whe
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -1128,8 +1128,8 @@ exports[`FeatherAutocomplete base functionality multi should show loading spinne
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -1307,8 +1307,8 @@ exports[`FeatherAutocomplete base functionality multi should show no results tex
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -1480,8 +1480,8 @@ exports[`FeatherAutocomplete base functionality single disabled state should ren
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -1635,8 +1635,8 @@ exports[`FeatherAutocomplete base functionality single disabled state should ren
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -1788,8 +1788,8 @@ exports[`FeatherAutocomplete base functionality single should lower label when t
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -2016,8 +2016,8 @@ exports[`FeatherAutocomplete base functionality single should not leave previous
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -2187,8 +2187,8 @@ exports[`FeatherAutocomplete base functionality single should raise the label wh
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -2360,8 +2360,8 @@ exports[`FeatherAutocomplete base functionality single should show loading spinn
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -2539,8 +2539,8 @@ exports[`FeatherAutocomplete base functionality single should show no results te
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -2775,8 +2775,8 @@ exports[`FeatherAutocomplete multi:specific chip selection should move chip sele
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -3011,8 +3011,8 @@ exports[`FeatherAutocomplete multi:specific chip selection should move chip sele
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -3247,8 +3247,8 @@ exports[`FeatherAutocomplete multi:specific chip selection should not move chip 
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -3482,8 +3482,8 @@ exports[`FeatherAutocomplete multi:specific chip selection should not perform an
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -3773,8 +3773,8 @@ exports[`FeatherAutocomplete multi:specific chip selection should select rightmo
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -4009,8 +4009,8 @@ exports[`FeatherAutocomplete multi:specific chip selection should select the rig
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -4244,8 +4244,8 @@ exports[`FeatherAutocomplete multi:specific chip selection should should deselec
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -4479,8 +4479,8 @@ exports[`FeatherAutocomplete multi:specific selection limit should clear warning
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -4760,8 +4760,8 @@ exports[`FeatherAutocomplete multi:specific selection limit should display a war
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -5043,8 +5043,8 @@ exports[`FeatherAutocomplete multi:specific selection limit should display a war
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -5302,8 +5302,8 @@ exports[`FeatherAutocomplete multi:specific selection limit should display a war
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -5457,8 +5457,8 @@ exports[`FeatherAutocomplete multi:specific should hide/reset menu and clear tex
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -5667,8 +5667,8 @@ exports[`FeatherAutocomplete single:specific should close menu when enter is pre
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -5840,8 +5840,8 @@ exports[`FeatherAutocomplete single:specific should handle a null property on va
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -6028,8 +6028,8 @@ exports[`FeatherAutocomplete single:specific should show add new element when in
   <div
     class="feather-input-sub-text"
     id="feather-autocomplete-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     

@@ -4,7 +4,7 @@
 
 .feather-styles .custom-container {
   @include elevation(2);
-  border-radius: 0.25rem;
+  border-radius: 4px;
   padding: 0.5rem 0.75rem;
   margin: 2rem;
   color: var($primary-text-on-surface);

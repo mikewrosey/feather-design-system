@@ -76,7 +76,7 @@ export default {
   display: inline-flex;
   align-items: center;
   background-color: var($border-light-on-surface);
-  border-radius: 1rem;
+  border-radius: 16px;
   border: 1px solid transparent;
   min-width: 0;
   max-width: 18rem;

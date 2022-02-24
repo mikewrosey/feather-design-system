@@ -479,16 +479,7 @@ exports[`FeatherDateInput.vue should render disabled 1`] = `
                 
               </div>
             </div>
-            <div
-              class="feather-input-sub-text"
-              id="feather-select-description"
-              style="display: none;"
-            >
-              <!---->
-              <!---->
-              
-              
-            </div>
+            <!---->
           </div>
           <div
             class="inline-select year feather-select-container"
@@ -2680,16 +2671,7 @@ exports[`FeatherDateInput.vue should render disabled 1`] = `
                 
               </div>
             </div>
-            <div
-              class="feather-input-sub-text"
-              id="feather-select-description"
-              style="display: none;"
-            >
-              <!---->
-              <!---->
-              
-              
-            </div>
+            <!---->
           </div>
           <button
             aria-label="Next month"
@@ -3245,8 +3227,8 @@ exports[`FeatherDateInput.vue should render disabled 1`] = `
   <div
     class="feather-input-sub-text"
     id="feather-date-input-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     

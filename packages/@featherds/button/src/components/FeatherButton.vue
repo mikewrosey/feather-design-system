@@ -154,7 +154,7 @@ export default {
 .btn {
   height: 2.25rem;
   padding: 0 1rem;
-  border-radius: 0.25rem;
+  border-radius: 4px;
   display: inline-block;
   border: none;
   cursor: pointer;

@@ -94,8 +94,8 @@ exports[`FeatherSelect.vue should not raise the label when its empty 1`] = `
   <div
     class="feather-input-sub-text"
     id="feather-select-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -198,8 +198,8 @@ exports[`FeatherSelect.vue should raise the label when it has a value 1`] = `
   <div
     class="feather-input-sub-text"
     id="feather-select-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -303,8 +303,8 @@ exports[`FeatherSelect.vue should render in disabled state 1`] = `
   <div
     class="feather-input-sub-text"
     id="feather-select-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -434,6 +434,7 @@ exports[`FeatherSelect.vue should render in error state 1`] = `
     class="feather-input-sub-text"
     id="feather-select-description"
   >
+       
     <!---->
     <div
       aria-live="assertive"

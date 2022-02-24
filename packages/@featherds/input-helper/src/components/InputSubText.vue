@@ -1,5 +1,10 @@
 <template>
-  <div class="feather-input-sub-text" :id="id" v-show="hasContent">
+  <div
+    class="feather-input-sub-text"
+    :id="id"
+    v-if="!inline || hint || error.length"
+  >
+    &nbsp;
     <div
       class="feather-input-hint"
       v-if="hint && !error.length"
@@ -21,16 +26,6 @@
 <script>
 import { inject, computed } from "vue";
 export default {
-  computed: {
-    hasContent() {
-      const hasRightSlot =
-        this.$slots.right &&
-        this.$slots
-          .right()
-          .findIndex((o) => o.children && o.children.length !== 0) !== -1;
-      return !!this.error || !!this.hint || hasRightSlot;
-    },
-  },
   props: {
     id: {
       type: String,

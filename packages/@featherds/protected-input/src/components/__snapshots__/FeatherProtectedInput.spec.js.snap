@@ -84,8 +84,8 @@ exports[`FeatherProtectedInput.vue should change input type when show password i
   <div
     class="feather-input-sub-text"
     id="feather-input-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     
@@ -177,8 +177,8 @@ exports[`FeatherProtectedInput.vue should render with show password icon by defa
   <div
     class="feather-input-sub-text"
     id="feather-input-description"
-    style="display: none;"
   >
+       
     <!---->
     <!---->
     

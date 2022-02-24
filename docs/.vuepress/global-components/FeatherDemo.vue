@@ -122,12 +122,10 @@ export default {
 @import "@featherds/styles/themes/variables";
 @import "@featherds/styles/mixins/typography";
 @import "@featherds/styles/mixins/responsive";
-@import "@featherds/input-helper/scss/spacing";
 .feather-demo {
-  //@include form-spacing();
   border: 1px solid var($shade-4);
   background-color: var($background);
-  border-radius: 0.25rem;
+  border-radius: 4px;
   margin-bottom: 1rem;
   :deep(pre[class*="language-"]) {
     margin: 0;
@@ -156,7 +154,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: 0.25rem 0.25rem 0 0;
+  border-radius: 4px 4px 0 0;
 }
 @include media-query-below(m) {
   .demo-toolbar {
@@ -173,7 +171,7 @@ export default {
 .demo {
   background-color: var($surface);
   padding: 0.5rem 1.25rem;
-  border-radius: 0 0 0.25rem 0.25rem;
+  border-radius: 0 0 4px 4px;
 }
 .theme-changer {
   margin-right: 0.5rem;

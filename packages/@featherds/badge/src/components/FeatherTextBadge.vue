@@ -17,7 +17,7 @@ export default {
   padding: 0.125rem 0.5rem;
   display: inline-flex;
   align-items: center;
-  border-radius: 0.125rem;
+  border-radius: 2px;
   @include caption;
   text-transform: uppercase;
   font-weight: var($font-bold);
